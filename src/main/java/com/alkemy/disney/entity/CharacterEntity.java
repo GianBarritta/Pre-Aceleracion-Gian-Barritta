@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "characters")
@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 public class CharacterEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String image;
@@ -22,16 +22,10 @@ public class CharacterEntity {
 
     private Integer age;
 
-    private Float weight;
+    private double weight;
 
     private String history;
 
-    //nombre asignado a la tabla intermedia
-    @JoinTable(name = "character_movie",
-            //join del lado: character
-            joinColumns = @JoinColumn(name = "character_id"),
-            //join del lado: movie
-            inverseJoinColumns = @JoinColumn(name = "movie_id"))
-    @ManyToMany
-    private Set<MovieEntity> associatedMovies = new HashSet<>();
+    @ManyToMany(mappedBy = "characters")
+    private List<MovieEntity> movies = new ArrayList<>();
 }

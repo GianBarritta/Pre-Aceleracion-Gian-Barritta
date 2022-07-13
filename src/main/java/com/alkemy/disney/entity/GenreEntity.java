@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "genre")
@@ -20,7 +19,7 @@ public class GenreEntity {
 
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
-    private Set<MovieEntity> associatedMovies = new HashSet<>();
+    @OneToMany(mappedBy = "genre")
+    private List<MovieEntity> movies;
 
 }
