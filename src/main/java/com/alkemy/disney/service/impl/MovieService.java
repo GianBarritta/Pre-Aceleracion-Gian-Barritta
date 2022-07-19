@@ -39,7 +39,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public MovieEntity findById(Long movieId) {
-        return movieRepository.findById(movieId).orElseThrow(() -> new InvalidException("No Movie with ID : " + movieId));
+        return movieRepository.findById(movieId).orElseThrow(() -> new ParamNotFound("No Movie with ID : " + movieId));
     }
 
     @Override
@@ -67,6 +67,11 @@ public class MovieService implements IMovieService {
         return null;
     }
 
+    @Override
+    public void addGenre(Long movieId, List<Long> genreIds) {
+
+    }
+
     private boolean checkGenresExistence(List<Long> genresIds) {
         return genreRepository.findAll().stream().map(Genre::getId).collect(Collectors.toList()).containsAll(genresIds);
     }
@@ -76,7 +81,6 @@ public class MovieService implements IMovieService {
         return findById(id).getGenre();
     }
 
-    @Override
     public void addGenres(Long movieId, List<Long> genresIds) {
         MovieEntity movieEntity = findById(movieId);
         if (checkGenresExistence(genresIds)) {

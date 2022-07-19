@@ -24,9 +24,9 @@ public interface IMovieService {
 
      List<GenreEntity> getGenre(Long id);
 
-     void addGenre(Long movieId, List<Long> genresIds);
+     void addGenre(Long movieId, List<Long> genreIds);
 
-     void removeGenre(Long movieId, List<Long> genresIds);
+     void removeGenre(Long movieId, List<Long> genreIds);
 
      List<MovieDTO> returnEmptyMovieDto();
 

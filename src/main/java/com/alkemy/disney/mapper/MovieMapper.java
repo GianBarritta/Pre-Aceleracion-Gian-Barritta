@@ -9,7 +9,6 @@ import com.alkemy.disney.entity.MovieEntity;
 import java.util.List;
 import org.mapstruct.*;
 
-
 @Mapper(componentModel = "spring")
 public interface MovieMapper  {
 
