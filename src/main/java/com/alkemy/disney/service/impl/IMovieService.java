@@ -1,7 +1,7 @@
-package com.alkemy.disney.service;
+package com.alkemy.disney.service.impl;
 
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
-import com.alkemy.disney.entity.GenreEntity;
 import com.alkemy.disney.entity.MovieEntity;
 
 import java.util.List;
@@ -22,12 +22,7 @@ public interface IMovieService {
 
      List<MovieEntity> findByGenreId(Long idGenre);
 
-     List<GenreEntity> getGenre(Long id);
+     List<MovieDTO> returnEmptyMovieDTO();
 
-     void addGenre(Long movieId, List<Long> genreIds);
-
-     void removeGenre(Long movieId, List<Long> genreIds);
-
-     List<MovieDTO> returnEmptyMovieDto();
-
- }
+     List<MovieBasicDTO> getByFilters(String name, String genre, String order, List<MovieEntity> moviesAssociated);
+}

@@ -1,13 +1,11 @@
 package com.alkemy.disney.mapper;
 
-import com.alkemy.disney.dto.GenreBasicDTO;
 import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
-import com.alkemy.disney.entity.GenreEntity;
 import com.alkemy.disney.entity.MovieEntity;
+import org.mapstruct.*;
 
 import java.util.List;
-import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface MovieMapper  {
@@ -25,6 +23,4 @@ public interface MovieMapper  {
     List<MovieBasicDTO> moviesToMovieBasicDTOS(List<MovieEntity> movies);
 
     List<MovieDTO> moviesToMovieDTOS(List<MovieEntity> movies);
-
-    List<GenreBasicDTO> genresToGenreBasicDTOS(List<GenreEntity> genres);
 }

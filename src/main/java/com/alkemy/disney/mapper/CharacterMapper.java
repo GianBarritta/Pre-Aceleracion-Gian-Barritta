@@ -15,16 +15,14 @@ public interface CharacterMapper {
 
     CharacterDTO characterToCharacterDTO(CharacterEntity characterEntity);
 
-    Character characterDTOToCharacter(CharacterDTO character);
+    CharacterDTO characterDTOToCharacter(CharacterDTO character);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    Character updateCharacterFromDto(CharacterDTO characterDto, @MappingTarget CharacterEntity characterEntity);
+    Character updateCharacterFromDTO(CharacterDTO characterDTO, @MappingTarget CharacterEntity characterEntity);
 
     List<CharacterBasicDTO> charactersToCharacterBasicDTOS(List<CharacterEntity> characters);
 
     List<CharacterDTO> charactersToCharacterDTOS(List<CharacterEntity> characters);
 
-
-}
 }

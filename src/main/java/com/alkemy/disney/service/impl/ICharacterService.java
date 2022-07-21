@@ -1,4 +1,4 @@
-package com.alkemy.disney.service;
+package com.alkemy.disney.service.impl;
 
 import com.alkemy.disney.entity.CharacterEntity;
 

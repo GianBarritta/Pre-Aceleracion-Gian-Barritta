@@ -5,8 +5,9 @@ import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.mapper.CharacterMapper;
 import com.alkemy.disney.mapper.MovieMapper;
-import com.alkemy.disney.service.ICharacterService;
+import com.alkemy.disney.service.impl.ICharacterService;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,13 @@ import java.util.List;
 @RequestMapping("/characters")
 public class CharacterController {
 
+    @Autowired
     private final CharacterMapper characterMapper;
 
+    @Autowired
     private final MovieMapper movieMapper;
 
+    @Autowired
     private final ICharacterService characterService;
 
     public CharacterController(CharacterMapper characterMapper, MovieMapper movieMapper, ICharacterService characterService) {
@@ -32,9 +36,9 @@ public class CharacterController {
     }
 
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<CharacterBasicDTO>> getAllCharacters() {
-        return new ResponseEntity<>(characterMapper.charactersToCharacterBasicDTO(characterService.getAll()), HttpStatus.OK);
+        return new ResponseEntity<>(characterMapper.charactersToCharacterBasicDTOS(characterService.getAll()), HttpStatus.OK);
     }
 
 
@@ -66,7 +70,7 @@ public class CharacterController {
     }
 
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<CharacterDTO> saveCharacter(@Valid @RequestBody CharacterDTO character) {
         Character characterCreated = characterService.save(characterMapper.characterDTOToCharacter(character));
         return new ResponseEntity<>(characterMapper.characterToCharacterDTO(characterCreated), HttpStatus.CREATED);

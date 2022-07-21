@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,7 @@ public class CharacterDTO {
 
     private String image;
 
+    @NotNull
     private String name;
 
     private Integer age;

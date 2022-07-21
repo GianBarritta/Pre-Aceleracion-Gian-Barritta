@@ -1,11 +1,11 @@
-package com.alkemy.disney.service.impl;
+package com.alkemy.disney.service;
 
 import com.alkemy.disney.entity.CharacterEntity;
 import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.exception.ParamNotFound;
 import com.alkemy.disney.repository.CharacterRepository;
 import com.alkemy.disney.repository.MovieRepository;
-import com.alkemy.disney.service.ICharacterService;
+import com.alkemy.disney.service.impl.ICharacterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class CharacterService implements ICharacterService {
 
-    private CharacterRepository characterRepository;
-    private MovieRepository movieRepository;
+    private final CharacterRepository characterRepository;
+
+    private final MovieRepository movieRepository;
 
     @Override
     public List<CharacterEntity> getAll() {
@@ -64,7 +65,7 @@ public class CharacterService implements ICharacterService {
     public void addMovies(Long characterId, List<Long> moviesIds) {
         CharacterEntity characterEntity = findById(characterId);
         if (checkMoviesExistence(moviesIds)) {movieRepository.findAllById(moviesIds).forEach(movie -> characterEntity.getMovies().add(movie));
-        } else {throw new InvalidException("Make sure all movies you want to add to the character already exist on the server");}
+        } else {throw new ParamNotFound("Make sure all movies you want to add to the character already exist on the server");}
         characterRepository.save(characterEntity);
     }
 
@@ -75,4 +76,4 @@ public class CharacterService implements ICharacterService {
         characterRepository.save(characterEntity);
     }
 }
-}
+

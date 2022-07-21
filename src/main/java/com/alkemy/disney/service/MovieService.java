@@ -1,12 +1,13 @@
-package com.alkemy.disney.service.impl;
+package com.alkemy.disney.service;
 
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
-import com.alkemy.disney.entity.GenreEntity;
 import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.exception.ParamNotFound;
+import com.alkemy.disney.repository.CharacterRepository;
 import com.alkemy.disney.repository.GenreRepository;
 import com.alkemy.disney.repository.MovieRepository;
-import com.alkemy.disney.service.IMovieService;
+import com.alkemy.disney.service.impl.IMovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,10 @@ import java.util.stream.Collectors;
 public class MovieService implements IMovieService {
 
     private final MovieRepository movieRepository;
+
     private final GenreRepository genreRepository;
+
+    private final CharacterRepository characterRepository;
 
     @Override
     public List<MovieEntity> getAll() {
@@ -62,29 +66,14 @@ public class MovieService implements IMovieService {
         return movieRepository.findByGenresId(idGenre);
     }
 
-    @Override
-    public List<GenreEntity> getGenre(Long id) {
-        return null;
+    private boolean checkGenreExistence(List<Long> genreId) {
+        return genreRepository.findAll().stream().map(Genre::getId).collect(Collectors.toList()).containsAll(genreIds);
     }
 
-    @Override
-    public void addGenre(Long movieId, List<Long> genreIds) {
-
-    }
-
-    private boolean checkGenresExistence(List<Long> genresIds) {
-        return genreRepository.findAll().stream().map(Genre::getId).collect(Collectors.toList()).containsAll(genresIds);
-    }
-
-    @Override
-    public List<GenreEntity> getGenre(Long id) {
-        return findById(id).getGenre();
-    }
-
-    public void addGenres(Long movieId, List<Long> genresIds) {
+    public void addGenreLong (movieId List<Long> genreId) {
         MovieEntity movieEntity = findById(movieId);
-        if (checkGenresExistence(genresIds)) {
-            genreRepository.findAllById(genresIds).forEach(genre -> movieEntity.getGenre().add(genre));
+        if (checkGenreExistence(genreId)) {
+            genreRepository.findAllById(genreId).forEach(genre -> movieEntity.getGenre().add(genre));
         } else {
             throw new ParamNotFound("Make sure all movies you want to add to the character already exist on the server");
         }
@@ -92,20 +81,18 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public void removeGenre(Long movieId, List<Long> genresIds) {
-
-    }
-
-    @Override
-    public void removeGenres(Long movieId, List<Long> genreId) {
-        MovieEntity movieEntity = findById(movieId);
-        movieEntity.getGenre().removeIf(genre -> genreId.contains(genre.getId()));
-        movieRepository.save(movieEntity);
-    }
-
-    @Override
-    public List<MovieDTO> returnEmptyMovieDto() {
-        List<MovieDTO> emptyMovies = new ArrayList<MovieDTO>();
+    public List<MovieDTO> returnEmptyMovieDTO() {
+        List<MovieDTO> emptyMovies = new ArrayList<>();
         return emptyMovies;
+    }
+
+    @Override
+    public List<MovieBasicDTO> getByFilters(String name, String genre, String order, List<MovieEntity> moviesAssociated) {
+        return null;
+    }
+
+    @Override
+    public MovieDTO removeCharacter(Long id, Long characterId){
+
     }
 }
