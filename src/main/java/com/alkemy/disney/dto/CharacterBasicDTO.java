@@ -13,16 +13,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CharacterBasicDTO {
 
-    private Long id;
-
     private String image;
 
     @NotNull
     private String name;
-
-    private Integer age;
-
-    private double weight;
-
-    private String history;
 }

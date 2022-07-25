@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "genre")
+@Table(name = "genres")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,7 +30,7 @@ public class GenreEntity {
 
     private boolean deleted = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "genre")
+    @OneToMany(mappedBy = "genres")
     private List<MovieEntity> movies;
 
 }

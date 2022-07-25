@@ -8,8 +8,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "characters")
@@ -38,5 +38,5 @@ public class CharacterEntity {
     private boolean deleted = Boolean.FALSE;
 
     @ManyToMany(mappedBy = "characters")
-    private List<MovieEntity> movies = new ArrayList<>();
+    private Set<MovieEntity> movies = new HashSet<>();
 }

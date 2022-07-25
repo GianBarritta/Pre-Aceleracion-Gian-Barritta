@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class CharacterService implements ICharacterService {
     private final MovieRepository movieRepository;
 
     @Override
-    public List<CharacterEntity> getAll() {
+    public Set<CharacterEntity> getAll() {
         return characterRepository.findAll();
     }
 
@@ -33,12 +33,12 @@ public class CharacterService implements ICharacterService {
     }
 
     @Override
-    public List<CharacterEntity> findByName(String name) {
+    public Set<CharacterEntity> findByName(String name) {
         return characterRepository.findByName(name);
     }
 
     @Override
-    public List<CharacterEntity> findByAge(Integer age) {
+    public Set<CharacterEntity> findByAge(Integer age) {
         return characterRepository.findByAge(age);
     }
 
@@ -53,24 +53,24 @@ public class CharacterService implements ICharacterService {
     }
 
     @Override
-    public List<CharacterEntity> findByMovieId(Long idMovie) {
+    public Set<CharacterEntity> findByMovieId(Long idMovie) {
         return characterRepository.findByMoviesId(idMovie);
     }
 
-    private boolean checkMoviesExistence(List<Long> moviesIds) {
-        return movieRepository.findAll().stream().map(MovieEntity::getId).collect(Collectors.toList()).containsAll(moviesIds);
+    private boolean checkMoviesExistence(Set<Long> moviesIds) {
+        return movieRepository.findAll().stream().map(MovieEntity::getId).collect(Collectors.toSet()).containsAll(moviesIds);
     }
 
     @Override
-    public void addMovies(Long characterId, List<Long> moviesIds) {
+    public void addMovies(Long characterId, Set<Long> moviesIds) {
         CharacterEntity characterEntity = findById(characterId);
         if (checkMoviesExistence(moviesIds)) {movieRepository.findAllById(moviesIds).forEach(movie -> characterEntity.getMovies().add(movie));
-        } else {throw new ParamNotFound("Make sure all movies you want to add to the character already exist on the server");}
+        } else {throw new ParamNotFound("Asegúrese de que todas las películas que desea agregar al personaje ya existan en el servidor");}
         characterRepository.save(characterEntity);
     }
 
     @Override
-    public void removeMovies(Long characterId, List<Long> moviesIds) {
+    public void removeMovies(Long characterId, Set<Long> moviesIds) {
         CharacterEntity characterEntity = findById(characterId);
         characterEntity.getMovies().removeIf(movie -> moviesIds.contains(movie.getId()));
         characterRepository.save(characterEntity);

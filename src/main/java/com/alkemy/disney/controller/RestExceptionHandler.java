@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
@@ -24,7 +25,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorDTO errorDTO = new ApiErrorDTO(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
-                List.of("Param Not Found")
+                Arrays.asList("Param Not Found")
         );
         return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }

@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CharacterDTO {
-
-    private Long id;
 
     private String image;
 
@@ -28,6 +26,6 @@ public class CharacterDTO {
 
     private String history;
 
-    private List<MovieEntity> movies;
+    private Set<MovieEntity> movies;
 }
 

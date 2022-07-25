@@ -2,24 +2,24 @@ package com.alkemy.disney.service.impl;
 
 import com.alkemy.disney.entity.CharacterEntity;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ICharacterService {
-    List<CharacterEntity> getAll();
+    Set<CharacterEntity> getAll();
 
     CharacterEntity findById(Long characterId);
 
-    List<CharacterEntity> findByName(String name);
+    Set<CharacterEntity> findByName(String name);
 
-    List<CharacterEntity> findByAge(Integer age);
+    Set<CharacterEntity> findByAge(Integer age);
 
     void delete(Long id);
 
     CharacterEntity save(CharacterEntity characterEntity);
 
-    List<CharacterEntity> findByMovieId(Long idMovie);
+    Set<CharacterEntity> findByMovieId(Long idMovie);
 
-    void addMovies(Long characterId, List<Long> moviesIds);
+    void addMovies(Long characterId, Set<Long> moviesIds);
 
-    void removeMovies(Long characterId, List<Long> moviesIds);
+    void removeMovies(Long characterId, Set<Long> moviesIds);
 }

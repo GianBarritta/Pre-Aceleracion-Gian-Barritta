@@ -12,8 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -28,12 +29,12 @@ public class MovieService implements IMovieService {
     private final CharacterRepository characterRepository;
 
     @Override
-    public List<MovieEntity> getAll() {
+    public Set<MovieEntity> getAll() {
         return movieRepository.findAll();
     }
 
     @Override
-    public List<MovieEntity> findAllOrderByCreationDate(String order) {
+    public Set<MovieEntity> findAllOrderByCreationDate(String order) {
         if(order.equalsIgnoreCase("ASC")) {return movieRepository.findAllByOrderByCreationDateAsc();
         } else if (order.equalsIgnoreCase("DESC")) {
             return movieRepository.findAllByOrderByCreationDateDesc();
@@ -47,7 +48,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieEntity> findByTitle(String title) {
+    public Set<MovieEntity> findByTitle(String title) {
         return movieRepository.findByTitle(title);
     }
 
@@ -62,7 +63,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieEntity> findByGenreId(Long idGenre) {
+    public Set<MovieEntity> findByGenreId(Long idGenre) {
         return movieRepository.findByGenresId(idGenre);
     }
 
@@ -70,7 +71,7 @@ public class MovieService implements IMovieService {
         return genreRepository.findAll().stream().map(Genre::getId).collect(Collectors.toList()).containsAll(genreIds);
     }
 
-    public void addGenreLong (movieId List<Long> genreId) {
+    public void addGenreLong (movieId Set<Long> genreId) {
         MovieEntity movieEntity = findById(movieId);
         if (checkGenreExistence(genreId)) {
             genreRepository.findAllById(genreId).forEach(genre -> movieEntity.getGenre().add(genre));
@@ -81,13 +82,13 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDTO> returnEmptyMovieDTO() {
-        List<MovieDTO> emptyMovies = new ArrayList<>();
+    public Set<MovieDTO> returnEmptyMovieDTO() {
+        Set<MovieDTO> emptyMovies = new HashSet<>();
         return emptyMovies;
     }
 
     @Override
-    public List<MovieBasicDTO> getByFilters(String name, String genre, String order, List<MovieEntity> moviesAssociated) {
+    public Set<MovieBasicDTO> getByFilters(String name, String genre, String order, Set<MovieEntity> moviesAssociated) {
         return null;
     }
 

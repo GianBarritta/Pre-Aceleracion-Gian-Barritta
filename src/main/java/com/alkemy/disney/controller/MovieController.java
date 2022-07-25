@@ -2,8 +2,6 @@ package com.alkemy.disney.controller;
 
 import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
-import com.alkemy.disney.entity.MovieEntity;
-import com.alkemy.disney.mapper.MovieMapper;
 import com.alkemy.disney.service.impl.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,80 +9,63 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
 
     @Autowired
-    private final MovieMapper movieMapper;
-
-    @Autowired
     private final IMovieService movieService;
 
-    public MovieController(MovieMapper movieMapper, IMovieService movieService) {
-        this.movieMapper = movieMapper;
-        this.movieService = movieService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<MovieDTO>> getAllMovies() {
-        return new ResponseEntity<>(movieMapper.moviesToMovieDTOS(movieService.getAll()), HttpStatus.OK);
-    }
-
+    //obtiene una película por id
     @GetMapping("/{id}")
-    public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long id) {
-        return new ResponseEntity<>(movieMapper.movieToMovieDTO(movieService.findById(id)), HttpStatus.OK);
+    public ResponseEntity<MovieDTO> getById(@PathVariable Long id) {
+        MovieDTO movie = movieService.getById(id);
+        return ResponseEntity.ok(movie);
     }
 
-    //Obtener todas las películas ordenadas por fecha de creación (ASC | DESC)
-    @GetMapping(params="order")
-    public ResponseEntity<List<MovieDTO>> getAllMoviesOrderByCreationDate(@Valid @RequestParam(value ="order", required = false) String order) {
-        List<MovieEntity> movies = movieService.findAllOrderByCreationDate(order);
-        if(movies == null) {return new ResponseEntity<>(movieService.returnEmptyMovieDTO(),HttpStatus.OK);
-        } else {return new ResponseEntity<>(movieMapper.moviesToMovieDTOS(movies), HttpStatus.OK);}
-    }
-
-    //Filtrar películas por título
-    @GetMapping(params="title")
-    public ResponseEntity<List<MovieDTO>> findMovieByTitle(@RequestParam(value = "title", required = false) String title) {
-        return new ResponseEntity<>(movieMapper.moviesToMovieDTOS(movieService.findByTitle(title)), HttpStatus.OK);
-    }
-
-    @GetMapping(params="genre")
-    public ResponseEntity<List<MovieDTO>> findMovieByGenre(@RequestParam(value = "genre", required = false) Long genreId) {
-        return new ResponseEntity<>(movieMapper.moviesToMovieDTOS(movieService.findByGenreId(genreId)), HttpStatus.OK);
-    }
-
+    //busca películas con filtros (nombre, genero y orden)
     @GetMapping
-    public ResponseEntity<List<MovieBasicDTO>> getByFilters(
+    public ResponseEntity<Set<MovieBasicDTO>> getDetailByFilters(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false, defaultValue = "0") String genre,
-            @RequestParam(required = false, defaultValue = "ASC") String order,
-            @RequestParam(required = false) List<MovieEntity> moviesAssociated){
-
-        List<MovieBasicDTO> movies = movieService.getByFilters(name, genre, order, moviesAssociated);
+            @RequestParam(required = false) Long genre,
+            @RequestParam(required = false, defaultValue = "ASC") String order
+    ) {
+        Set<MovieBasicDTO> movies = movieService.getByFilters(name, genre, order);
         return ResponseEntity.ok(movies);
     }
 
+    //guarda una película creada
     @PostMapping
-    public ResponseEntity<MovieDTO> saveMovie(@Valid @RequestBody MovieDTO movie) {
-        MovieEntity movieCreated = movieService.save(movieMapper.movieDTOToMovie(movie));
-        return new ResponseEntity<>(movieMapper.movieToMovieDTO(movieCreated), HttpStatus.CREATED);
+    ResponseEntity<MovieDTO> save(@Valid @RequestBody MovieDTO movie) {
+        MovieDTO savedMovie = movieService.save(movie);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
 
+    @PostMapping("/{idMovie}/characters/{idCharacter}")
+    public ResponseEntity<MovieDTO> addCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
+        MovieDTO movie = movieService.addCharacter(movieId, characterId);
+        return ResponseEntity.ok(movie);
+    }
 
+    //actualiza una película
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDTO> updateMovie(@Valid @RequestBody MovieDTO movie, @PathVariable("id") Long id){
-        MovieEntity movieUpdated = movieService.save(movieMapper.updateMovieFromDTO(movie, movieService.findById(id)));
-        return new ResponseEntity<>(movieMapper.movieToMovieDTO(movieUpdated), HttpStatus.OK);
+    public ResponseEntity<MovieDTO> update(@Valid @RequestBody MovieDTO movieDTO, @PathVariable Long id) {
+        MovieDTO savedMovie = movieService.update(movieDTO, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
 
+    //borra la película
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteMovieById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         movieService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/{idMovie}/characters/{idCharacter}")
+    public ResponseEntity<MovieDTO> removeCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
+        MovieDTO movie = movieService.removeCharacter(movieId, characterId);
+        return ResponseEntity.ok(movie);
+    }
 }

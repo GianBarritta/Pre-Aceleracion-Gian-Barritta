@@ -58,4 +58,7 @@ public class MovieEntity {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private GenreEntity genre;
+
+    @Column(name = "genre_id", nullable = false)
+    private Long genreId;
 }

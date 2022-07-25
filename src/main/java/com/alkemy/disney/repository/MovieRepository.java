@@ -6,17 +6,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
 
     Optional<MovieEntity> findById(Long id);
 
-    List<MovieEntity> findByTitle(String title);
+    Set<MovieEntity> findByTitle(String title);
 
-    List<MovieEntity> findByGenresId(Long genreId);
+    Set<MovieEntity> findByGenresId(Long genreId);
 
-    List<MovieEntity> findAllByOrderByCreationDateAsc();
+    Set<MovieEntity> findAllByOrderByCreationDateAsc();
 
-    List<MovieEntity> findAllByOrderByCreationDateDesc();
+    Set<MovieEntity> findAllByOrderByCreationDateDesc();
 }

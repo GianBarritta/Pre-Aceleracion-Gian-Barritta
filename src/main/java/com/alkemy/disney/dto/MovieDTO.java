@@ -1,6 +1,7 @@
 package com.alkemy.disney.dto;
 
 import com.alkemy.disney.entity.CharacterEntity;
+import com.alkemy.disney.entity.GenreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class MovieDTO {
 
-    private Long id;
-
     private String image;
 
     @NotNull
@@ -30,6 +29,10 @@ public class MovieDTO {
     @Min(1)
     @Max(5)
     private Integer score;
+
+    private GenreEntity genre;
+
+    private Long genreId;
 
     private Set<CharacterEntity> characters;
 }

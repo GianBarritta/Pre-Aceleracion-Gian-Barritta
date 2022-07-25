@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,12 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 public class GenreDTO {
 
-    private Long id;
-
     private String image;
 
     @NotNull
     private String name;
 
-    private List<MovieEntity> movies;
+    private Set<MovieEntity> movies;
 }

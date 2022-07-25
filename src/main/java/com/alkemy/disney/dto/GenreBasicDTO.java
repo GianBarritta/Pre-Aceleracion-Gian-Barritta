@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class GenreBasicDTO {
 
-    private Long id;
-
     private String image;
 
     @NotNull
