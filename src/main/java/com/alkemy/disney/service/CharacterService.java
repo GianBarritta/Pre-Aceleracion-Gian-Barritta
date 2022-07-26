@@ -29,11 +29,11 @@ public class CharacterService implements ICharacterService {
     private CharacterSpecification characterSpecification;
 
     //guardar al personaje en el repositorio
-    public CharacterDTO save(CharacterDTO dto, Long titleId)
+    public CharacterDTO save(CharacterDTO dto, Long movieId)
     {
         CharacterEntity entity = characterMapper.characterDTO2Entity(dto);
         CharacterEntity savedEntity = characterRepository.save(entity);
-        movieService.addCharacter(titleId, savedEntity.getId());
+        movieService.addCharacter(movieId, savedEntity.getId());
         CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity,true);
 
         return result;
@@ -55,7 +55,7 @@ public class CharacterService implements ICharacterService {
         if(!entity.isPresent()) {
             throw new ParamNotFound("ID de personaje no encontrado");
         }
-        CharacterDTO characterDTO = this.characterMapper.characterEntity2DTO(entity.get(),true);
+        CharacterDTO characterDTO = characterMapper.characterEntity2DTO(entity.get(),true);
         return characterDTO;
     }
 
@@ -81,7 +81,7 @@ public class CharacterService implements ICharacterService {
         {
             throw new ParamNotFound("ID de personaje para modificar no encontrado");
         }
-        this.characterMapper.modifyCharacterRefreshValues(entity.get(),characterDTO);
+        characterMapper.modifyCharacterRefreshValues(entity.get(),characterDTO);
         CharacterEntity savedEntity = characterRepository.save(entity.get());
         CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity, true);
 

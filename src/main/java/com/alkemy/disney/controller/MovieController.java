@@ -52,7 +52,7 @@ public class MovieController {
     //actualiza una película
     @PutMapping("/{id}")
     public ResponseEntity<MovieDTO> update(@Valid @RequestBody MovieDTO movieDTO, @PathVariable Long id) {
-        MovieDTO savedMovie = movieService.update(movieDTO, id);
+        MovieDTO savedMovie = movieService.updateMovie(id, movieDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
 

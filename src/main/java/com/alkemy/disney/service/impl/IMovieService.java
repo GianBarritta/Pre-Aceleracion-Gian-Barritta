@@ -15,7 +15,7 @@ public interface IMovieService {
 
      MovieDTO getMovieDTOById(Long id);
 
-     MovieDTO updateMovie(Long id, MovieDTO titleDTO);
+     MovieDTO updateMovie(Long id, MovieDTO movieDTO);
 
      void delete(Long id);
 
