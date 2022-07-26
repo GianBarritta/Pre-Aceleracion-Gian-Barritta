@@ -16,7 +16,7 @@ import java.util.Set;
 public class MovieController {
 
     @Autowired
-    private final IMovieService movieService;
+    private IMovieService movieService;
 
     //obtiene una película por id
     @GetMapping("/{id}")

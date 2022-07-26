@@ -1,79 +1,110 @@
 package com.alkemy.disney.service;
 
+import com.alkemy.disney.dto.CharacterBasicDTO;
+import com.alkemy.disney.dto.CharacterDTO;
+import com.alkemy.disney.dto.CharacterFiltersDTO;
 import com.alkemy.disney.entity.CharacterEntity;
-import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.exception.ParamNotFound;
+import com.alkemy.disney.mapper.CharacterMapper;
 import com.alkemy.disney.repository.CharacterRepository;
-import com.alkemy.disney.repository.MovieRepository;
+import com.alkemy.disney.repository.specifications.CharacterSpecification;
 import com.alkemy.disney.service.impl.ICharacterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class CharacterService implements ICharacterService {
 
-    private final CharacterRepository characterRepository;
+    @Autowired
+    private CharacterRepository characterRepository;
+    private CharacterMapper characterMapper;
+    private MovieService movieService;
+    private CharacterSpecification characterSpecification;
 
-    private final MovieRepository movieRepository;
+    //guardar al personaje en el repositorio
+    public CharacterDTO save(CharacterDTO dto, Long titleId)
+    {
+        CharacterEntity entity = characterMapper.characterDTO2Entity(dto);
+        CharacterEntity savedEntity = characterRepository.save(entity);
+        movieService.addCharacter(titleId, savedEntity.getId());
+        CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity,true);
 
-    @Override
-    public Set<CharacterEntity> getAll() {
-        return characterRepository.findAll();
+        return result;
     }
 
-    @Override
-    public CharacterEntity findById(Long characterId) {
-        return characterRepository.findById(characterId).orElseThrow(() -> new ParamNotFound("No Character with ID : " + characterId));
+    //busca una identificación en el repositorio de personajes
+    public CharacterEntity getCharacterById(Long id)
+    {
+        Optional<CharacterEntity> entity = characterRepository.findById(id);
+        if(!entity.isPresent()) {
+            throw new ParamNotFound("ID de personaje no encontrado");
+        }
+        return entity.get();
     }
 
-    @Override
-    public Set<CharacterEntity> findByName(String name) {
-        return characterRepository.findByName(name);
+    //busca una identificación en el repositorio de personajes y convierte la entidad en un DTO
+    public CharacterDTO getCharacterDTOById(Long id){
+        Optional<CharacterEntity> entity = characterRepository.findById(id);
+        if(!entity.isPresent()) {
+            throw new ParamNotFound("ID de personaje no encontrado");
+        }
+        CharacterDTO characterDTO = this.characterMapper.characterEntity2DTO(entity.get(),true);
+        return characterDTO;
     }
 
-    @Override
-    public Set<CharacterEntity> findByAge(Integer age) {
-        return characterRepository.findByAge(age);
+    //búsqueda de personajes por filtros (nombre, edad, peso y peliculas (tiene orden ASC/DESC))
+    public Set<CharacterDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies)
+    {
+        CharacterFiltersDTO filtersDTO = new CharacterFiltersDTO(name, age, weight, movies);
+        Set<CharacterEntity> entities = characterRepository.findAll(characterSpecification.getByFilters(filtersDTO));
+        Set<CharacterDTO> dtos = characterMapper.characterEntitySet2DTOSet(entities,true);
+        return dtos;
     }
 
-    @Override
-    public void delete(Long id){
-        characterRepository.delete(findById(id));
+    public Set<CharacterBasicDTO> getAllCharactersBasic() {
+        Set<CharacterEntity> characterEntitiesBasicSet = (Set<CharacterEntity>) characterRepository.findAll();
+        return characterMapper.characterEntitySet2BasicDTOSet(characterEntitiesBasicSet);
     }
 
-    @Override
-    public CharacterEntity save(CharacterEntity characterEntity) {
-        return characterRepository.save(characterEntity);
+    //invoca un método de mapeador y modifica solo los valores del personaje
+    public CharacterDTO updateCharacter(Long id, CharacterDTO characterDTO)
+    {
+        Optional<CharacterEntity>entity = characterRepository.findById(id);
+        if(!entity.isPresent())
+        {
+            throw new ParamNotFound("ID de personaje para modificar no encontrado");
+        }
+        this.characterMapper.modifyCharacterRefreshValues(entity.get(),characterDTO);
+        CharacterEntity savedEntity = characterRepository.save(entity.get());
+        CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity, true);
+
+        return result;
     }
 
-    @Override
-    public Set<CharacterEntity> findByMovieId(Long idMovie) {
-        return characterRepository.findByMoviesId(idMovie);
+    //devuelve todos los personajes guardados en el repositorio con sus peliculas asociadas
+    public Set<CharacterDTO> getCharacters()
+    {
+        Set<CharacterEntity> entities = (Set<CharacterEntity>) characterRepository.findAll();
+        Set<CharacterDTO>result = characterMapper.characterEntitySet2DTOSet(entities,true);
+        return result;
     }
 
-    private boolean checkMoviesExistence(Set<Long> moviesIds) {
-        return movieRepository.findAll().stream().map(MovieEntity::getId).collect(Collectors.toSet()).containsAll(moviesIds);
-    }
-
-    @Override
-    public void addMovies(Long characterId, Set<Long> moviesIds) {
-        CharacterEntity characterEntity = findById(characterId);
-        if (checkMoviesExistence(moviesIds)) {movieRepository.findAllById(moviesIds).forEach(movie -> characterEntity.getMovies().add(movie));
-        } else {throw new ParamNotFound("Asegúrese de que todas las películas que desea agregar al personaje ya existan en el servidor");}
-        characterRepository.save(characterEntity);
-    }
-
-    @Override
-    public void removeMovies(Long characterId, Set<Long> moviesIds) {
-        CharacterEntity characterEntity = findById(characterId);
-        characterEntity.getMovies().removeIf(movie -> moviesIds.contains(movie.getId()));
-        characterRepository.save(characterEntity);
+    //Soft Delete de un personaje guardado en el repositorio
+    public void delete(Long id)
+    {
+        Optional<CharacterEntity>entity = characterRepository.findById(id);
+        if(!entity.isPresent())
+        {
+            throw new ParamNotFound("ID de personaje no encontrado, no se pudo eliminar");
+        }
+        characterRepository.deleteById(id);
     }
 }
 

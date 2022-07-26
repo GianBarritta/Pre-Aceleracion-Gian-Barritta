@@ -1,5 +1,7 @@
 package com.alkemy.disney.service.impl;
 
-public interface IGenreService {
+import com.alkemy.disney.dto.GenreDTO;
 
+public interface IGenreService {
+    GenreDTO save(GenreDTO dto);
 }

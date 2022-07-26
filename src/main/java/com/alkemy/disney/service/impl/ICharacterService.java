@@ -1,25 +1,22 @@
 package com.alkemy.disney.service.impl;
 
+import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.entity.CharacterEntity;
 
 import java.util.Set;
 
 public interface ICharacterService {
-    Set<CharacterEntity> getAll();
+    CharacterDTO save(CharacterDTO dto, Long titleId);
 
-    CharacterEntity findById(Long characterId);
+    CharacterEntity getCharacterById(Long id);
 
-    Set<CharacterEntity> findByName(String name);
+    CharacterDTO getCharacterDTOById(Long id);
 
-    Set<CharacterEntity> findByAge(Integer age);
+    Set<CharacterDTO> getCharacters();
+
+    CharacterDTO updateCharacter(Long id, CharacterDTO characterDTO);
+
+    Set<CharacterDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies);
 
     void delete(Long id);
-
-    CharacterEntity save(CharacterEntity characterEntity);
-
-    Set<CharacterEntity> findByMovieId(Long idMovie);
-
-    void addMovies(Long characterId, Set<Long> moviesIds);
-
-    void removeMovies(Long characterId, Set<Long> moviesIds);
 }

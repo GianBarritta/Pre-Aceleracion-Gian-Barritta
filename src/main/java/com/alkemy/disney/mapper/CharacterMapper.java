@@ -2,7 +2,6 @@ package com.alkemy.disney.mapper;
 
 import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
-import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.entity.CharacterEntity;
 import com.alkemy.disney.entity.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class CharacterMapper {
         characterDTO.setWeight(entity.getWeight());
         characterDTO.setHistory(entity.getHistory());
         if (b){
-            Set<MovieEntity> movieEntities = MovieMapper.MovieEntity2DTOSet(entity.getMovies(), false);
+            Set<MovieEntity> movieEntities = MovieMapper.movieEntitySet2DTOSet(entity.getMovies(), false);
             characterDTO.setMovies(movieEntities);
         }
         return characterDTO;
@@ -52,25 +51,8 @@ public class CharacterMapper {
         return CharactersDTOSet;
     }
 
-    //conversión CharacterEntity a CharacterBasicDTO
-    public CharacterBasicDTO characterEntity2BasicDTO(CharacterEntity entity){
-        CharacterBasicDTO characterBasicDTO = new CharacterBasicDTO();
-        characterBasicDTO.setImage(entity.getImage());
-        characterBasicDTO.setName(entity.getName());
-        return characterBasicDTO;
-    }
-
-    //conversión CharacterEntitySet a CharacterBasicDTOSet
-    public Set<CharacterBasicDTO> characterEntitySet2BasicDTOSet(Set<CharacterEntity> entities){
-        Set<CharacterBasicDTO> charactersBasicDTOSet = new HashSet<>();
-        for (CharacterEntity entity: entities){
-            charactersBasicDTOSet.add(characterEntity2BasicDTO(entity));
-        }
-        return charactersBasicDTOSet;
-    }
-
-    // Converts a Character DTO List to an Entity List
-    public Set<CharacterEntity> characterDTO2EntitySet(Set<CharacterDTO> dtos)
+    //conversión CharacterDTOSet a CharacterEntitySet
+    public Set<CharacterEntity> characterDTOSet2EntitySet(Set<CharacterDTO> dtos)
     {
         Set<CharacterEntity> entities = new HashSet<>();
 
@@ -82,20 +64,27 @@ public class CharacterMapper {
         return entities;
     }
 
+    //conversión Entity a BasicDTO
+    public Set<CharacterBasicDTO> characterEntitySet2BasicDTOSet(Set<CharacterEntity> entitiesSet) {
+        Set<CharacterBasicDTO> dtoBasicSet = new HashSet<>();
+        CharacterBasicDTO basicDto;
+        for (CharacterEntity entity : entitiesSet) {
+            basicDto = new CharacterBasicDTO();
+            basicDto.setImage(entity.getImage());
+            basicDto.setName(entity.getName());
+            dtoBasicSet.add(basicDto);
+        }
+        return dtoBasicSet;
+    }
+
     //se modifica la información de la Entidad con la del DTO
-    public void modifyCharacterValues(CharacterEntity entity, CharacterDTO characterDTO)
+    public void modifyCharacterRefreshValues(CharacterEntity entity, CharacterDTO characterDTO)
     {
         entity.setImage(characterDTO.getImage());
         entity.setName(characterDTO.getName());
         entity.setAge(characterDTO.getAge());
         entity.setWeight(characterDTO.getWeight());
         entity.setHistory(characterDTO.getHistory());
-        Set<MovieEntity> movieEntities = movieMapper.movieDTO2EntitySet(characterDTO.getMovies());
+    }
+}
 
-        for(MovieEntity movieEntity : movieEntities){
-            entity.getMovies().add(movieEntity);
-        }
-    }
-    }
-}
-}

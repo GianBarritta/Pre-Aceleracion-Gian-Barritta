@@ -1,99 +1,127 @@
 package com.alkemy.disney.service;
 
-import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
+import com.alkemy.disney.dto.MovieFiltersDTO;
+import com.alkemy.disney.entity.CharacterEntity;
 import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.exception.ParamNotFound;
+import com.alkemy.disney.mapper.MovieMapper;
 import com.alkemy.disney.repository.CharacterRepository;
-import com.alkemy.disney.repository.GenreRepository;
 import com.alkemy.disney.repository.MovieRepository;
+import com.alkemy.disney.repository.specifications.MovieSpecification;
 import com.alkemy.disney.service.impl.IMovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class MovieService implements IMovieService {
 
-    private final MovieRepository movieRepository;
+    @Autowired
+    private MovieMapper movieMapper;
+    private MovieService movieService;
+    private MovieRepository movieRepository;
+    private CharacterService characterService;
+    private MovieSpecification movieSpecification;
+    private CharacterRepository characterRepository;
 
-    private final GenreRepository genreRepository;
-
-    private final CharacterRepository characterRepository;
-
-    @Override
-    public Set<MovieEntity> getAll() {
-        return movieRepository.findAll();
+    //guarda la película en el repositorio
+    public MovieDTO save(MovieDTO dto)
+    {
+        MovieEntity entity = movieMapper.movieDTO2Entity(dto);
+        MovieEntity savedEntity = movieRepository.save(entity);
+        MovieDTO result = movieMapper.movieEntity2DTO(savedEntity, true);
+        return result;
     }
 
-    @Override
-    public Set<MovieEntity> findAllOrderByCreationDate(String order) {
-        if(order.equalsIgnoreCase("ASC")) {return movieRepository.findAllByOrderByCreationDateAsc();
-        } else if (order.equalsIgnoreCase("DESC")) {
-            return movieRepository.findAllByOrderByCreationDateDesc();
+    //busca una identificación en el repositorio de peliculas
+    public MovieEntity getMovieById(Long id) {
+        Optional<MovieEntity> entity = movieRepository.findById(id);
+        if(!entity.isPresent()){
+            throw new ParamNotFound("ID de película no encontrado");
         }
-        return null;
+        return entity.get();
     }
 
-    @Override
-    public MovieEntity findById(Long movieId) {
-        return movieRepository.findById(movieId).orElseThrow(() -> new ParamNotFound("No Movie with ID : " + movieId));
-    }
-
-    @Override
-    public Set<MovieEntity> findByTitle(String title) {
-        return movieRepository.findByTitle(title);
-    }
-
-    @Override
-    public void delete(Long id){
-        movieRepository.delete(findById(id));
-    }
-
-    @Override
-    public MovieEntity save(MovieEntity movieEntity) {
-        return movieRepository.save(movieEntity);
-    }
-
-    @Override
-    public Set<MovieEntity> findByGenreId(Long idGenre) {
-        return movieRepository.findByGenresId(idGenre);
-    }
-
-    private boolean checkGenreExistence(List<Long> genreId) {
-        return genreRepository.findAll().stream().map(Genre::getId).collect(Collectors.toList()).containsAll(genreIds);
-    }
-
-    public void addGenreLong (movieId Set<Long> genreId) {
-        MovieEntity movieEntity = findById(movieId);
-        if (checkGenreExistence(genreId)) {
-            genreRepository.findAllById(genreId).forEach(genre -> movieEntity.getGenre().add(genre));
-        } else {
-            throw new ParamNotFound("Make sure all movies you want to add to the character already exist on the server");
+    //busca una identificación en el repositorio de películas y convierte la entidad en un DTO
+    public MovieDTO getMovieDTOById(Long id){
+        Optional<MovieEntity> entity = movieRepository.findById(id);
+        if(!entity.isPresent()) {
+            throw new ParamNotFound("ID de película no encontrado");
         }
-        movieRepository.save(movieEntity);
+        MovieDTO movieDTO = movieMapper.movieEntity2DTO(entity.get(), true);
+        return movieDTO;
     }
 
-    @Override
-    public Set<MovieDTO> returnEmptyMovieDTO() {
-        Set<MovieDTO> emptyMovies = new HashSet<>();
-        return emptyMovies;
+    //búsqueda de películas por filtro (nombre y género (tiene orden ASC/DESC))
+    public List<MovieDTO> getByFilters(String name, Long genreId, String order)
+    {
+        MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, genreId, order);
+        List<MovieEntity> entities = movieRepository.findAll(movieService.getByFilters(filtersDTO));
+        List<MovieDTO> dtos = movieMapper.movieEntity2DTOSet(entities,true);
+
+        return dtos;
     }
 
-    @Override
-    public Set<MovieBasicDTO> getByFilters(String name, String genre, String order, Set<MovieEntity> moviesAssociated) {
-        return null;
+    //invoca un método de mapeador y modifica los valores de película
+    public MovieDTO updateMovie(Long id, MovieDTO movieDTO){
+        Optional<MovieEntity> entity = movieRepository.findById(id);
+
+        if(!entity.isPresent())
+        {
+            throw new ParamNotFound("ID de título para modificar no encontrado");
+        }
+        this.movieMapper.modifyMovieRefreshValues(entity.get(),movieDTO);
+        MovieEntity savedEntity = this.movieRepository.save(entity.get());
+        MovieDTO result = this.movieMapper.movieEntity2DTO(savedEntity, true);
+
+        return result;
     }
 
-    @Override
-    public MovieDTO removeCharacter(Long id, Long characterId){
+    public MovieDTO addCharacter(Long movieId, Long characterId) {
+        MovieEntity movie = getMovieEntityById(movieId);
+        CharacterEntity character = getCharacterEntityById(characterId);
+        movie.addCharacter(character);
+        return movieMapper.movieEntity2DTO(movie, true);
+    }
 
+    public MovieDTO removeCharacter(Long movieId, Long characterId) {
+        MovieEntity movie = getMovieEntityById(movieId);
+        CharacterEntity character = getCharacterEntityById(characterId);
+        movie.removeCharacter(character);
+        return movieMapper.movieEntity2DTO(movie, true);
+    }
+
+    //Soft Delete de una película guardada en el repositorio
+    public void delete(Long id)
+    {
+        Optional<MovieEntity>entity = movieRepository.findById(id);
+        if(!entity.isPresent())
+        {
+            throw new ParamNotFound("ID de título no encontrado, no se pudo eliminar");
+        }
+        movieRepository.deleteById(id);
+    }
+
+    private MovieEntity getMovieEntityById(Long id) {
+        Optional<MovieEntity> movie = movieRepository.findById(id);
+        if(movie.isEmpty()){
+            throw new ParamNotFound("Película con ID: " + id + " no encontrado");
+        }
+        return movie.get();
+    }
+
+    private CharacterEntity getCharacterEntityById(Long id) {
+        Optional<CharacterEntity> character = characterRepository.findById(id);
+        if(character.isEmpty()){
+            throw new ParamNotFound("Personaje con ID: " + id + " no encontrado");
+        }
+        return character.get();
     }
 }

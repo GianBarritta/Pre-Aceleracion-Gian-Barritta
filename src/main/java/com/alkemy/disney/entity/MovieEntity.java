@@ -61,4 +61,12 @@ public class MovieEntity {
 
     @Column(name = "genre_id", nullable = false)
     private Long genreId;
+
+    public void addCharacter(CharacterEntity character) {
+        this.getCharacters().add(character);
+    }
+
+    public  void removeCharacter(CharacterEntity character) {
+        this.getCharacters().remove(character);
+    }
 }

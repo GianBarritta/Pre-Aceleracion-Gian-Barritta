@@ -17,7 +17,7 @@ public class CharacterController {
 
     @Lazy
     @Autowired
-    private final ICharacterService characterService;
+    private ICharacterService characterService;
 
     //obtener el personaje por su id
     @GetMapping("/{id}")

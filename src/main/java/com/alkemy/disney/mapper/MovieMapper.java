@@ -8,6 +8,8 @@ import com.alkemy.disney.entity.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +26,9 @@ public class MovieMapper {
         entity.setImage(movieDTO.getImage());
         entity.setTitle(movieDTO.getTitle());
         entity.setScore(movieDTO.getScore());
-        entity.setCreationDate(movieDTO.getCreationDate());
+        entity.setCreationDate(string2LocalDate(string2LocalDate(movieDTO.getCreationDate()));
         entity.setGenreId(movieDTO.getGenreId());
-        Set<CharacterEntity> characterEntities = characterMapper.characterDTO2EntitySet(movieDTO.getCharacters());
+        Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());
         entity.setCharacters(characterEntities);
 
         return entity;
@@ -42,8 +44,8 @@ public class MovieMapper {
         movieDTO.setGenreId(entity.getGenreId());
 
         if(b){
-            Set<CharacterEntity> characterEntities = characterMapper.characterEntity2DTOSet(entity.getCharacters(),false);
-            movieDTO.setCharacters(characterEntities);
+            Set<CharacterDTO> characterDTOS = characterMapper.characterEntitySet2DTOSet(entity.getCharacters(),false);
+            movieDTO.setCharacters(characterDTOS);
         }
         return movieDTO;
     }
@@ -64,33 +66,35 @@ public class MovieMapper {
 
         for(MovieDTO dto : dtos)
         {
-            entities.add(MovieDTO2Entity(dto));
+            entities.add(movieDTO2Entity(dto));
         }
         return entities;
     }
 
-    //conversión MovieEntitySet MovieBasicDTOSet
-    public Set<MovieBasicDTO> movieEntitySet2BasicDTOSet(Set<MovieEntity> entities){
-        Set<MovieBasicDTO> movieBasicDTOSSet = new HashSet<>();
-        for (MovieEntity ent: entities){
-            movieBasicDTOSSet.add(movieEntity2BasicDTO(ent));
-        }
-        return movieBasicDTOSSet;
+    //conversión Entity a BasicDTO
+    public MovieBasicDTO movieEntity2BasicDTO(MovieEntity entity) {
+        MovieBasicDTO dto = new MovieBasicDTO();
+        dto.setImage(entity.getImage());
+        dto.setTitle(entity.getTitle());
+        dto.setCreationDate(string2LocalDate(entity.getCreationDate().toString());
+        return dto;
     }
 
+    //conversión String a LocalDate
+    private LocalDate string2LocalDate(String stringDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(stringDate, formatter);
+    }
+
+
     //se modifica la información de la Entidad con la del DTO
-    public void modifyMovieValues(MovieEntity entity, MovieDTO movieDTO)
+    public void modifyMovieRefreshValues(MovieEntity entity, MovieDTO movieDTO)
     {
         entity.setImage(movieDTO.getImage());
         entity.setTitle(movieDTO.getTitle());
-        entity.setCreationDate(movieDTO.getCreationDate());
+        entity.setCreationDate(string2LocalDate(string2LocalDate(movieDTO.getCreationDate()));
         entity.setScore(movieDTO.getScore());
         entity.setGenreId(movieDTO.getGenreId());
-        Set<CharacterEntity> characterEntities = characterMapper.characterDTO2EntitySet(movieDTO.getCharacters());
-
-        for(CharacterEntity characterEntity : characterEntities){
-            entity.getCharacters().add(characterEntity);
-        }
+        Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());
     }
-
 }

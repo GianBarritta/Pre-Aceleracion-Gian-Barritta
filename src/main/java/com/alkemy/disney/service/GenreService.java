@@ -1,10 +1,12 @@
 package com.alkemy.disney.service;
 
-import com.alkemy.disney.repository.CharacterRepository;
+import com.alkemy.disney.dto.GenreDTO;
+import com.alkemy.disney.entity.GenreEntity;
+import com.alkemy.disney.mapper.GenreMapper;
 import com.alkemy.disney.repository.GenreRepository;
-import com.alkemy.disney.repository.MovieRepository;
 import com.alkemy.disney.service.impl.IGenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenreService implements IGenreService {
 
-    private final CharacterRepository characterRepository;
+    @Autowired
+    private GenreMapper genreMapper;
+    private GenreRepository genreRepository;
 
-    private final MovieRepository movieRepository;
-
-    private final GenreRepository genreRepository;
-
-
-
+    //guarda el genero en el repositorio
+    public GenreDTO save(GenreDTO dto)
+    {
+        GenreEntity entity = genreMapper.genreDTO2Entity(dto);
+        GenreEntity savedEntity = genreRepository.save(entity);
+        GenreDTO result = genreMapper.genreEntity2DTO(savedEntity);
+        return result;
+    }
 }
