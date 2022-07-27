@@ -20,8 +20,8 @@ public class MovieController {
 
     //obtiene una película por id
     @GetMapping("/{id}")
-    public ResponseEntity<MovieDTO> getById(@PathVariable Long id) {
-        MovieDTO movie = movieService.getById(id);
+    public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id) {
+        MovieDTO movie = movieService.getMovieDTOById(id);
         return ResponseEntity.ok(movie);
     }
 

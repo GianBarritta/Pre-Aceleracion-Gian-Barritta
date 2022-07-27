@@ -18,6 +18,7 @@ public class MovieMapper {
 
     @Autowired
     private CharacterMapper characterMapper;
+    @Autowired
     private GenreMapper genreMapper;
 
     //conversión MovieDTO a MovieEntity

@@ -17,6 +17,7 @@ public class GenreService implements IGenreService {
 
     @Autowired
     private GenreMapper genreMapper;
+    @Autowired
     private GenreRepository genreRepository;
 
     //guarda el genero en el repositorio

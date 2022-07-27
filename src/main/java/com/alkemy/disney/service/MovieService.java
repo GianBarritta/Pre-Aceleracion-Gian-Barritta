@@ -25,10 +25,15 @@ public class MovieService implements IMovieService {
 
     @Autowired
     private MovieMapper movieMapper;
+    @Autowired
     private MovieService movieService;
+    @Autowired
     private MovieRepository movieRepository;
+    @Autowired
     private CharacterService characterService;
+    @Autowired
     private MovieSpecification movieSpecification;
+    @Autowired
     private CharacterRepository characterRepository;
 
     //guarda la película en el repositorio

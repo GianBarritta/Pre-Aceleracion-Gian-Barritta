@@ -15,6 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class GenreDTO {
 
+    private long id;
+
     private String image;
 
     @NotNull

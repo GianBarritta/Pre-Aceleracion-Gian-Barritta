@@ -4,7 +4,6 @@ import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.service.impl.ICharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +14,12 @@ import java.util.Set;
 @RequestMapping("/characters")
 public class CharacterController {
 
-    @Lazy
     @Autowired
     private ICharacterService characterService;
 
     //obtener el personaje por su id
     @GetMapping("/{id}")
-    public ResponseEntity<CharacterDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CharacterDTO> getCharacterById(@PathVariable Long id) {
         CharacterDTO character = characterService.getCharacterDTOById(id);
         return ResponseEntity.ok().body(character);
     }

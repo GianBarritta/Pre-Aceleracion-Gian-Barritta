@@ -24,8 +24,11 @@ public class CharacterService implements ICharacterService {
 
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
     private CharacterMapper characterMapper;
+    @Autowired
     private MovieService movieService;
+    @Autowired
     private CharacterSpecification characterSpecification;
 
     //guardar al personaje en el repositorio

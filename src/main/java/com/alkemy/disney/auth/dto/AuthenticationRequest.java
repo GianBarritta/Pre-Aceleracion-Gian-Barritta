@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Setter
 public class AuthenticationRequest {
 
-    @Email(message = "Username must be an email")
+    @Email(message = "El nombre de usuario debe ser un correo electrónico")
     private String username;
 
     @Size(min = 8)

@@ -19,6 +19,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class MovieDTO {
 
+    private long id;
+
     private String image;
 
     @NotNull
