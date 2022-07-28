@@ -5,7 +5,7 @@ import com.alkemy.disney.auth.dto.AuthenticationResponse;
 import com.alkemy.disney.auth.dto.UserDTO;
 import com.alkemy.disney.auth.entity.UserEntity;
 import com.alkemy.disney.auth.repository.UserRepository;
-import com.alkemy.disney.service.EmailService;
+import com.alkemy.disney.service.impl.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +26,7 @@ public class UserDetailsCustomService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private EmailService emailService;
+    private IEmailService iEmailService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -48,7 +48,7 @@ public class UserDetailsCustomService implements UserDetailsService {
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setPassword(userDTO.getPassword());
         userEntity = userRepository.save(userEntity);
-        emailService.sendWelcomeEmailTo(userEntity.getUsername());
+        iEmailService.sendWelcomeEmailTo(userEntity.getUsername());
         return true;
     }
 

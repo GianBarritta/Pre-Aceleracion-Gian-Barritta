@@ -1,7 +1,7 @@
 package com.alkemy.disney.controller;
 
 import com.alkemy.disney.dto.GenreDTO;
-import com.alkemy.disney.service.impl.IGenreService;
+import com.alkemy.disney.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenreController {
 
     @Autowired
-    private IGenreService genreService;
+    private GenreService genreService;
 
     //guarda un genero creado
     @PostMapping

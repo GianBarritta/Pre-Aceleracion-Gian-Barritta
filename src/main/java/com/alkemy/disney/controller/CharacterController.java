@@ -2,7 +2,7 @@ package com.alkemy.disney.controller;
 
 import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
-import com.alkemy.disney.service.impl.ICharacterService;
+import com.alkemy.disney.service.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class CharacterController {
 
     @Autowired
-    private ICharacterService characterService;
+    private CharacterService characterService;
 
     //obtener el personaje por su id
     @GetMapping("/{id}")
@@ -34,23 +34,23 @@ public class CharacterController {
         return ResponseEntity.ok().body(characters);
     }
 
-    //crear personaje
+    //crea el personaje
     @PostMapping
     public ResponseEntity<CharacterDTO> save(@RequestBody CharacterDTO characterDTO, @RequestParam Long movieId) {
         CharacterDTO savedCharacter = characterService.save(characterDTO, movieId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCharacter);
     }
 
-    //modificar personaje
+    //modifica el personaje
     @PutMapping("/{id}")
     public ResponseEntity<CharacterDTO> update(@PathVariable Long id, @RequestBody CharacterDTO character){
         CharacterDTO characterUpdated = characterService.updateCharacter(id, character);
         return ResponseEntity.ok().body(characterUpdated);
     }
 
-    //borrar personaje
+    //borra el personaje
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         characterService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

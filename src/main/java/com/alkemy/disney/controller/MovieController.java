@@ -2,7 +2,7 @@ package com.alkemy.disney.controller;
 
 import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
-import com.alkemy.disney.service.impl.IMovieService;
+import com.alkemy.disney.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class MovieController {
 
     @Autowired
-    private IMovieService movieService;
+    private MovieService movieService;
 
     //obtiene una película por id
     @GetMapping("/{id}")
@@ -36,20 +36,21 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    //guarda una película creada
+    //guarda la película creada
     @PostMapping
     ResponseEntity<MovieDTO> save(@Valid @RequestBody MovieDTO movie) {
         MovieDTO savedMovie = movieService.save(movie);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
 
+    //agrega el personaje a la película
     @PostMapping("/{idMovie}/characters/{idCharacter}")
     public ResponseEntity<MovieDTO> addCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
         MovieDTO movie = movieService.addCharacter(movieId, characterId);
         return ResponseEntity.ok(movie);
     }
 
-    //actualiza una película
+    //actualiza la película
     @PutMapping("/{id}")
     public ResponseEntity<MovieDTO> update(@Valid @RequestBody MovieDTO movieDTO, @PathVariable Long id) {
         MovieDTO savedMovie = movieService.updateMovie(id, movieDTO);
@@ -63,6 +64,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    //remueve el personaje de la película
     @DeleteMapping("/{idMovie}/characters/{idCharacter}")
     public ResponseEntity<MovieDTO> removeCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
         MovieDTO movie = movieService.removeCharacter(movieId, characterId);

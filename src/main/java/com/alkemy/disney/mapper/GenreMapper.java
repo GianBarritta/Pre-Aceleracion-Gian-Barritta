@@ -17,10 +17,10 @@ public class GenreMapper {
     //conversión GenreEntity a GenreDTO
     public GenreDTO genreEntity2Dto(GenreEntity genreEntity) {
         GenreDTO genreDTO = new GenreDTO();
+        genreDTO.setId(genreEntity.getId());
         genreDTO.setImage(genreEntity.getImage());
         genreDTO.setName(genreEntity.getName());
         return genreDTO;
-
     }
 
     //conversión GenreDTO a GenreEntity
@@ -41,8 +41,7 @@ public class GenreMapper {
     }
 
     //conversión GenreDTOList a GenreEntityList
-    public List<GenreEntity> genreDTOList2EntityList(List<GenreDTO> dtos)
-    {
+    public List<GenreEntity> genreDTOList2EntityList(List<GenreDTO> dtos) {
         List<GenreEntity>entities = new ArrayList<>();
 
         for(GenreDTO dto : dtos)

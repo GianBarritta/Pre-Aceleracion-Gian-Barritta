@@ -2,8 +2,8 @@ package com.alkemy.disney.mapper;
 
 import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
+import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.entity.CharacterEntity;
-import com.alkemy.disney.entity.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,20 +24,22 @@ public class CharacterMapper {
         entity.setAge(characterDTO.getAge());
         entity.setWeight(characterDTO.getWeight());
         entity.setHistory(characterDTO.getHistory());
+
         return entity;
     }
 
     //conversión CharacterEntity a CharacterDTO
     public CharacterDTO characterEntity2DTO(CharacterEntity entity, boolean b){
         CharacterDTO characterDTO = new CharacterDTO();
+        characterDTO.setId(entity.getId());
         characterDTO.setImage(entity.getImage());
         characterDTO.setName(entity.getName());
         characterDTO.setAge(entity.getAge());
         characterDTO.setWeight(entity.getWeight());
         characterDTO.setHistory(entity.getHistory());
         if (b){
-            Set<MovieEntity> movieEntities = MovieMapper.movieEntitySet2DTOSet(entity.getMovies(), false);
-            characterDTO.setMovies(movieEntities);
+            Set<MovieDTO> movieDTOS = movieMapper.movieEntity2DTOSet(entity.getMovies(), false);
+            characterDTO.setMovies(movieDTOS);
         }
         return characterDTO;
     }
@@ -52,8 +54,7 @@ public class CharacterMapper {
     }
 
     //conversión CharacterDTOSet a CharacterEntitySet
-    public Set<CharacterEntity> characterDTOSet2EntitySet(Set<CharacterDTO> dtos)
-    {
+    public Set<CharacterEntity> characterDTOSet2EntitySet(Set<CharacterDTO> dtos) {
         Set<CharacterEntity> entities = new HashSet<>();
 
         for(CharacterDTO dto : dtos)
@@ -64,7 +65,7 @@ public class CharacterMapper {
         return entities;
     }
 
-    //conversión Entity a BasicDTO
+    //conversión CharacterEntitySet a CharacterBasicDTOSet
     public Set<CharacterBasicDTO> characterEntitySet2BasicDTOSet(Set<CharacterEntity> entitiesSet) {
         Set<CharacterBasicDTO> dtoBasicSet = new HashSet<>();
         CharacterBasicDTO basicDto;
@@ -78,8 +79,7 @@ public class CharacterMapper {
     }
 
     //se modifica la información de la Entidad con la del DTO
-    public void modifyCharacterRefreshValues(CharacterEntity entity, CharacterDTO characterDTO)
-    {
+    public void modifyCharacterRefreshValues(CharacterEntity entity, CharacterDTO characterDTO) {
         entity.setImage(characterDTO.getImage());
         entity.setName(characterDTO.getName());
         entity.setAge(characterDTO.getAge());
