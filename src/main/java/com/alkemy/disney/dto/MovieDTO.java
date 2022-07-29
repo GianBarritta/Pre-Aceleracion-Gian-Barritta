@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -26,7 +26,7 @@ public class MovieDTO {
     @NotNull
     private String title;
 
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @Min(1)
     @Max(5)
@@ -36,5 +36,5 @@ public class MovieDTO {
 
     private Long genreId;
 
-    private Set<CharacterEntity> characters;
+    private Set<CharacterDTO> characters;
 }

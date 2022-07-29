@@ -28,6 +28,6 @@ public class CharacterDTO {
 
     private String history;
 
-    private Set<MovieEntity> movies;
+    private Set<MovieDTO> movies;
 }
 

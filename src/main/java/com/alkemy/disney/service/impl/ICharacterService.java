@@ -23,16 +23,16 @@ import java.util.Set;
 public class ICharacterService implements CharacterService {
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private final CharacterRepository characterRepository;
 
     @Autowired
-    private CharacterMapper characterMapper;
+    private final CharacterMapper characterMapper;
 
     @Autowired
-    private IMovieService iMovieService;
+    private final IMovieService iMovieService;
 
     @Autowired
-    private CharacterSpecification characterSpecification;
+    private final CharacterSpecification characterSpecification;
 
     //busca una identificación en el repositorio de personajes
     public CharacterEntity getCharacterById(Long id) {
@@ -54,10 +54,10 @@ public class ICharacterService implements CharacterService {
     }
 
     //búsqueda de personajes por filtros (nombre, edad, peso y películas (tiene orden ASC/DESC))
-    public Set<CharacterDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies) {
+    public Set<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies) {
         CharacterFiltersDTO filtersDTO = new CharacterFiltersDTO(name, age, weight, movies);
         Set<CharacterEntity> entities = characterRepository.findAll(characterSpecification.getByFilters(filtersDTO));
-        Set<CharacterDTO> dtos = characterMapper.characterEntitySet2DTOSet(entities,true);
+        Set<CharacterBasicDTO> dtos = characterMapper.characterEntityCollection2BasicDTOSet(entities);
         return dtos;
     }
 

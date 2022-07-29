@@ -19,7 +19,7 @@ public interface CharacterService {
 
     CharacterDTO updateCharacter(Long id, CharacterDTO characterDTO);
 
-    Set<CharacterDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies);
+    Set<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies);
 
     void delete(Long id);
 }

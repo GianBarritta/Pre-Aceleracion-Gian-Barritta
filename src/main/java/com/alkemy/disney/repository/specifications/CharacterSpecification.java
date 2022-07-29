@@ -44,7 +44,7 @@ public class CharacterSpecification{
             }
 
             //peso
-            if(filtersDTO.getWeight() != null) {
+            if(filtersDTO.getWeight() != 0) {
                 predicates.add(
                         criteriaBuilder.like(
                                 root.get("weight").as(String.class),

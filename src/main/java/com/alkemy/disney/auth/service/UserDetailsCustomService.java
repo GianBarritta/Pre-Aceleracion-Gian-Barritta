@@ -5,7 +5,7 @@ import com.alkemy.disney.auth.dto.AuthenticationResponse;
 import com.alkemy.disney.auth.dto.UserDTO;
 import com.alkemy.disney.auth.entity.UserEntity;
 import com.alkemy.disney.auth.repository.UserRepository;
-import com.alkemy.disney.service.impl.IEmailService;
+import com.alkemy.disney.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,7 +27,10 @@ public class UserDetailsCustomService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private IEmailService iEmailService;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -44,11 +48,15 @@ public class UserDetailsCustomService implements UserDetailsService {
     }
 
     public boolean save(UserDTO userDTO) {
+        UserEntity user = userRepository.findByUsername(userDTO.getUsername());
+        if(user != null) {
+            throw new BadCredentialsException("El nombre de usuario ya está en uso");
+        }
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(userDTO.getUsername());
-        userEntity.setPassword(userDTO.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userEntity = userRepository.save(userEntity);
-        iEmailService.sendWelcomeEmailTo(userEntity.getUsername());
+        emailService.sendWelcomeEmailTo(userEntity.getUsername());
         return true;
     }
 

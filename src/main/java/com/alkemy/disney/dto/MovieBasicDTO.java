@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -19,5 +19,5 @@ public class MovieBasicDTO {
     @NotNull
     private String title;
 
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 }

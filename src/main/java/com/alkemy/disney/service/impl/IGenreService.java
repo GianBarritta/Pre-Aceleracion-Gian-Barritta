@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class IGenreService implements GenreService {
 
     @Autowired
-    private GenreMapper genreMapper;
+    private final GenreMapper genreMapper;
 
     @Autowired
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
 
     //guarda el genero en el repositorio
     public GenreDTO save(GenreDTO dto) {

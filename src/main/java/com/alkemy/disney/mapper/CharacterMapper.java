@@ -7,6 +7,7 @@ import com.alkemy.disney.entity.CharacterEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,11 @@ import java.util.Set;
 public class CharacterMapper {
 
     @Autowired
-    private MovieMapper movieMapper;
+    private final MovieMapper movieMapper;
+
+    public CharacterMapper(MovieMapper movieMapper) {
+        this.movieMapper = movieMapper;
+    }
 
     //conversión CharacterDTO a CharacterEntity
     public CharacterEntity characterDTO2Entity(CharacterDTO characterDTO){
@@ -76,6 +81,23 @@ public class CharacterMapper {
             dtoBasicSet.add(basicDto);
         }
         return dtoBasicSet;
+    }
+
+    //conversión CharacterEntity a CharacterBasicDTO
+    public CharacterBasicDTO characterEntity2BasicDTO (CharacterEntity entity) {
+        CharacterBasicDTO dto = new CharacterBasicDTO();
+        dto.setName(entity.getName());
+        dto.setImage(entity.getImage());
+        return dto;
+    }
+
+    //conversión CharacterEntityCollection a Character
+    public Set<CharacterBasicDTO> characterEntityCollection2BasicDTOSet (Collection<CharacterEntity> entities) {
+        Set<CharacterBasicDTO> DTOS = new HashSet<>();
+        for(CharacterEntity entity : entities) {
+            DTOS.add(characterEntity2BasicDTO(entity));
+        }
+        return DTOS;
     }
 
     //se modifica la información de la Entidad con la del DTO

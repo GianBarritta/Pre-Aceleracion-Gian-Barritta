@@ -1,5 +1,6 @@
 package com.alkemy.disney.service.impl;
 
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.dto.MovieFiltersDTO;
 import com.alkemy.disney.entity.CharacterEntity;
@@ -24,25 +25,19 @@ import java.util.Set;
 public class IMovieService implements MovieService {
 
     @Autowired
-    private MovieMapper movieMapper;
+    private final MovieMapper movieMapper;
 
     @Autowired
-    private IMovieService iMovieService;
+    private final MovieRepository movieRepository;
 
     @Autowired
-    private MovieRepository movieRepository;
+    private final MovieSpecification movieSpecification;
 
     @Autowired
-    private ICharacterService iCharacterService;
-
-    @Autowired
-    private MovieSpecification movieSpecification;
-
-    @Autowired
-    private CharacterRepository characterRepository;
+    private final CharacterRepository characterRepository;
 
     //busca película por su id
-    private MovieEntity getMovieEntityById(Long id) {
+    public MovieEntity getMovieEntityById(Long id) {
         Optional<MovieEntity> movie = movieRepository.findById(id);
         if(movie.isEmpty()){
             throw new ParamNotFound("Película con ID: " + id + " no encontrado");
@@ -51,7 +46,7 @@ public class IMovieService implements MovieService {
     }
 
     //busca personaje por su id
-    private CharacterEntity getCharacterEntityById(Long id) {
+    public CharacterEntity getCharacterEntityById(Long id) {
         Optional<CharacterEntity> character = characterRepository.findById(id);
         if(character.isEmpty()){
             throw new ParamNotFound("Personaje con ID: " + id + " no encontrado");
@@ -79,10 +74,10 @@ public class IMovieService implements MovieService {
     }
 
     //búsqueda de películas por filtro (nombre y género (tiene orden ASC/DESC))
-    public Set<MovieDTO> getByFilters(String name, Long genreId, String order) {
+    public Set<MovieBasicDTO> getByFilters(String name, Long genreId, String order) {
         MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, genreId, order);
         Set<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
-        Set<MovieDTO> dtos = movieMapper.movieEntity2DTOSet(entities,true);
+        Set<MovieBasicDTO> dtos = movieMapper.movieEntityCollection2BasicDTOSet(entities);
         return dtos;
     }
 
@@ -101,25 +96,27 @@ public class IMovieService implements MovieService {
         if(!entity.isPresent()) {
             throw new ParamNotFound("ID de título para modificar no encontrado");
         }
-        this.movieMapper.modifyMovieRefreshValues(entity.get(),movieDTO);
+        movieMapper.modifyMovieRefreshValues(entity.get(),movieDTO);
         MovieEntity savedEntity = movieRepository.save(entity.get());
         MovieDTO result = movieMapper.movieEntity2DTO(savedEntity, true);
         return result;
     }
 
-    //agrega personaje a una película
+    //agrega un personaje a una película
     public MovieDTO addCharacter(Long movieId, Long characterId) {
         MovieEntity movie = getMovieEntityById(movieId);
         CharacterEntity character = getCharacterEntityById(characterId);
         movie.addCharacter(character);
+        movieRepository.save(movie);
         return movieMapper.movieEntity2DTO(movie, true);
     }
 
-    //remueve personaje de una película
+    //remueve un personaje de una película
     public MovieDTO removeCharacter(Long movieId, Long characterId) {
         MovieEntity movie = getMovieEntityById(movieId);
         CharacterEntity character = getCharacterEntityById(characterId);
         movie.removeCharacter(character);
+        movieRepository.save(movie);
         return movieMapper.movieEntity2DTO(movie, true);
     }
 

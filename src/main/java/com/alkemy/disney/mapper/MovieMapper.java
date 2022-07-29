@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,10 +18,11 @@ import java.util.Set;
 public class MovieMapper {
 
     @Autowired
-    private CharacterMapper characterMapper;
+    private final CharacterMapper characterMapper;
 
-    @Autowired
-    private GenreMapper genreMapper;
+    public MovieMapper(CharacterMapper characterMapper) {
+        this.characterMapper = characterMapper;
+    }
 
     //conversión MovieDTO a MovieEntity
     public MovieEntity movieDTO2Entity(MovieDTO movieDTO){
@@ -28,7 +30,7 @@ public class MovieMapper {
         entity.setImage(movieDTO.getImage());
         entity.setTitle(movieDTO.getTitle());
         entity.setScore(movieDTO.getScore());
-        entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate()));
+        entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate().toString()));
         entity.setGenreId(movieDTO.getGenreId());
         Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());
         entity.setCharacters(characterEntities);
@@ -42,7 +44,7 @@ public class MovieMapper {
         movieDTO.setId(entity.getId());
         movieDTO.setImage(entity.getImage());
         movieDTO.setTitle(entity.getTitle());
-        movieDTO.setCreationDate(string2LocalDate(entity.getCreationDate()));
+        movieDTO.setCreationDate(string2LocalDate(entity.getCreationDate().toString()));
         movieDTO.setScore(entity.getScore());
         movieDTO.setGenreId(entity.getGenreId());
 
@@ -62,23 +64,12 @@ public class MovieMapper {
         return movieDTOSet;
     }
 
-    //conversión MovieDTOSet a MovieEntitySet
-    public Set<MovieEntity> movieDTO2EntitySet(Set<MovieDTO> dtos) {
-        Set<MovieEntity>entities = new HashSet<>();
-
-        for(MovieDTO dto : dtos)
-        {
-            entities.add(movieDTO2Entity(dto));
-        }
-        return entities;
-    }
-
-    //conversión Entity a BasicDTO
+    //conversión MovieEntity a MovieBasicDTO
     public MovieBasicDTO movieEntity2BasicDTO(MovieEntity entity) {
         MovieBasicDTO dto = new MovieBasicDTO();
         dto.setImage(entity.getImage());
         dto.setTitle(entity.getTitle());
-        dto.setCreationDate(string2LocalDate(entity.getCreationDate().toString());
+        dto.setCreationDate(string2LocalDate(entity.getCreationDate().toString()));
         return dto;
     }
 
@@ -88,12 +79,20 @@ public class MovieMapper {
         return LocalDate.parse(stringDate, formatter);
     }
 
+    //conversión de MovieEntityCollection a MovieBasicDTOSet
+    public Set<MovieBasicDTO> movieEntityCollection2BasicDTOSet(Collection<MovieEntity> entities) {
+        Set<MovieBasicDTO> DTOS = new HashSet<>();
+        for (MovieEntity entity : entities){
+            DTOS.add(movieEntity2BasicDTO(entity));
+        }
+        return DTOS;
+    }
 
     //se modifica la información de la Entidad con la del DTO
     public void modifyMovieRefreshValues(MovieEntity entity, MovieDTO movieDTO) {
         entity.setImage(movieDTO.getImage());
         entity.setTitle(movieDTO.getTitle());
-        entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate()));
+        entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate().toString()));
         entity.setScore(movieDTO.getScore());
         entity.setGenreId(movieDTO.getGenreId());
         Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());

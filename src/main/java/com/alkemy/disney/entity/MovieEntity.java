@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class MovieEntity {
 
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @Min(value = 1, message = "El minimo es 1")
     @Max(value = 5, message = "El maximo es 5")

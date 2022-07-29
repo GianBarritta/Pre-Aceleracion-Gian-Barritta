@@ -2,7 +2,9 @@ package com.alkemy.disney.controller;
 
 import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
+import com.alkemy.disney.dto.CharacterFiltersDTO;
 import com.alkemy.disney.service.CharacterService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/characters")
 public class CharacterController {
 
     @Autowired
-    private CharacterService characterService;
+    private final CharacterService characterService;
 
     //obtener el personaje por su id
     @GetMapping("/{id}")
@@ -24,12 +27,12 @@ public class CharacterController {
         return ResponseEntity.ok().body(character);
     }
 
-    //buscar personajes con filtros (name, age, weight y movies)
+    //buscar personajes con filtros (nombre, edad, peso y películas)
     @GetMapping
-    public ResponseEntity<Set<CharacterBasicDTO>> search(@RequestParam(required = false) String name,
-                                                         @RequestParam(required = false) Integer age,
-                                                         @RequestParam(required = false) double weight,
-                                                         @RequestParam(required = false) Set<Long> movies) {
+    public ResponseEntity<Set<CharacterBasicDTO>> getByFilters(@RequestParam(required = false) String name,
+                                                               @RequestParam(required = false) Integer age,
+                                                               @RequestParam(required = false) double weight,
+                                                               @RequestParam(required = false) Set<Long> movies) {
         Set<CharacterBasicDTO> characters = characterService.getByFilters(name, age, weight, movies);
         return ResponseEntity.ok().body(characters);
     }

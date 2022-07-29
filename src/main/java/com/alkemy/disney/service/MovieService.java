@@ -1,5 +1,6 @@
 package com.alkemy.disney.service;
 
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.entity.MovieEntity;
 
@@ -7,11 +8,11 @@ import java.util.Set;
 
 public interface MovieService {
 
-     MovieDTO save(MovieEntity dto);
+     MovieDTO save(MovieDTO dto);
 
      MovieEntity getMovieById(Long id);
 
-     Set<MovieDTO> getByFilters(String name, Long genreId, String order);
+     Set<MovieBasicDTO> getByFilters(String name, Long genreId, String order);
 
      MovieDTO getMovieDTOById(Long id);
 

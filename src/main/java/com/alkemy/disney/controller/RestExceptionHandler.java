@@ -30,6 +30,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Esto debe ser específico de la aplicación";
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -46,11 +52,5 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorDTO apiError = new ApiErrorDTO(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
         return handleExceptionInternal(
                 ex, apiError, headers, apiError.getStatus(), request);
-    }
-
-    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Esto debe ser específico de la aplicación";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 }
