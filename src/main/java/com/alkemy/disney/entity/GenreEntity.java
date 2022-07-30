@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,5 +26,4 @@ public class GenreEntity {
 
     @OneToMany(mappedBy = "genres")
     private List<MovieEntity> movies;
-
 }

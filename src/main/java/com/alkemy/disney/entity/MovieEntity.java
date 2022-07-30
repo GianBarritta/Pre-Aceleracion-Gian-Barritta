@@ -9,8 +9,6 @@ import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +62,7 @@ public class MovieEntity {
         this.getCharacters().add(character);
     }
 
-    public  void removeCharacter(CharacterEntity character) {
+    public void removeCharacter(CharacterEntity character) {
         this.getCharacters().remove(character);
     }
 }
