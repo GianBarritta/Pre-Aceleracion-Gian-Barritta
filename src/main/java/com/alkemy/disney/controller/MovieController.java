@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,12 +29,12 @@ public class MovieController {
 
     //busca películas con filtros (nombre, genero y orden)
     @GetMapping
-    public ResponseEntity<Set<MovieBasicDTO>> getDetailByFilters(
+    public ResponseEntity<List<MovieBasicDTO>> getDetailByFilters(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long genre,
             @RequestParam(required = false, defaultValue = "ASC") String order
     ) {
-        Set<MovieBasicDTO> movies = movieService.getByFilters(name, genre, order);
+        List<MovieBasicDTO> movies = movieService.getByFilters(name, genre, order);
         return ResponseEntity.ok(movies);
     }
 
@@ -46,7 +46,7 @@ public class MovieController {
     }
 
     //agrega el personaje a la película
-    @PostMapping("/{idMovie}/characters/{idCharacter}")
+    @PostMapping("/{movieId}/characters/{characterId}")
     public ResponseEntity<MovieDTO> addCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
         MovieDTO movie = movieService.addCharacter(movieId, characterId);
         return ResponseEntity.ok(movie);
@@ -67,7 +67,7 @@ public class MovieController {
     }
 
     //remueve el personaje de la película
-    @DeleteMapping("/{idMovie}/characters/{idCharacter}")
+    @DeleteMapping("/{movieId}/characters/{characterId}")
     public ResponseEntity<MovieDTO> removeCharacter(@PathVariable Long movieId, @PathVariable Long characterId) {
         MovieDTO movie = movieService.removeCharacter(movieId, characterId);
         return ResponseEntity.ok(movie);

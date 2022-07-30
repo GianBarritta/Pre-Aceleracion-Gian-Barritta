@@ -1,12 +1,12 @@
 package com.alkemy.disney.dto;
 
-import com.alkemy.disney.entity.MovieEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -28,6 +28,6 @@ public class CharacterDTO {
 
     private String history;
 
-    private Set<MovieDTO> movies;
+    private Set<MovieDTO> movies = new HashSet<>();
 }
 

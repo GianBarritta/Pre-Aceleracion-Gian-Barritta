@@ -36,20 +36,14 @@ public class CharacterSpecification{
             //año
             if(filtersDTO.getAge() != null) {
                 predicates.add(
-                        criteriaBuilder.like(
-                                root.get("age").as(String.class),
-                                "%" + filtersDTO.getAge() + "%"
-                        )
+                        criteriaBuilder.equal(root.get("age"), "%" + filtersDTO.getAge() + "%")
                 );
             }
 
             //peso
             if(filtersDTO.getWeight() != 0) {
                 predicates.add(
-                        criteriaBuilder.like(
-                                root.get("weight").as(String.class),
-                                "%" + filtersDTO.getWeight() + "%"
-                        )
+                        criteriaBuilder.equal(root.get("weight"), "%" + filtersDTO.getWeight() + "%")
                 );
             }
 

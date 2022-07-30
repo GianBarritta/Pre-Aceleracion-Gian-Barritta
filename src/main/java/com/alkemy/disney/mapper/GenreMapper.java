@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class GenreMapper {
 
     //conversión GenreEntity a GenreDTO
-    public GenreDTO genreEntity2Dto(GenreEntity genreEntity) {
+    public GenreDTO genreEntity2DTO(GenreEntity genreEntity) {
         GenreDTO genreDTO = new GenreDTO();
         genreDTO.setId(genreEntity.getId());
         genreDTO.setImage(genreEntity.getImage());

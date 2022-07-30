@@ -22,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE movie SET deleted = true WHERE id=?")
-@Where(clause = "deleted = false")
+@Where(clause = "deleted=false")
 public class MovieEntity {
 
     @Id
@@ -34,11 +34,9 @@ public class MovieEntity {
     private String title;
 
     @Column(name = "creation_date")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
-    @Min(value = 1, message = "El minimo es 1")
-    @Max(value = 5, message = "El maximo es 5")
     private Integer score;
 
     private boolean deleted = Boolean.FALSE;
@@ -56,7 +54,7 @@ public class MovieEntity {
     private Set<CharacterEntity> characters = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "genre_id")
+    @JoinColumn(name = "genre_id", insertable = false, updatable = false)
     private GenreEntity genre;
 
     @Column(name = "genre_id", nullable = false)

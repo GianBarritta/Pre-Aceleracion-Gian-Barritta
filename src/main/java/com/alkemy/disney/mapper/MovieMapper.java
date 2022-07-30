@@ -10,19 +10,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class MovieMapper {
 
     @Autowired
-    private final CharacterMapper characterMapper;
-
-    public MovieMapper(CharacterMapper characterMapper) {
-        this.characterMapper = characterMapper;
-    }
+    private CharacterMapper characterMapper;
 
     //conversión MovieDTO a MovieEntity
     public MovieEntity movieDTO2Entity(MovieDTO movieDTO){
@@ -32,9 +26,10 @@ public class MovieMapper {
         entity.setScore(movieDTO.getScore());
         entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate().toString()));
         entity.setGenreId(movieDTO.getGenreId());
-        Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());
-        entity.setCharacters(characterEntities);
-
+        for (CharacterDTO characterDTO : movieDTO.getCharacters()) {
+            CharacterEntity character = characterMapper.characterDTO2Entity(characterDTO);
+            entity.getCharacters().add(character);
+        }
         return entity;
     }
 
@@ -47,21 +42,11 @@ public class MovieMapper {
         movieDTO.setCreationDate(string2LocalDate(entity.getCreationDate().toString()));
         movieDTO.setScore(entity.getScore());
         movieDTO.setGenreId(entity.getGenreId());
-
         if(b){
-            Set<CharacterDTO> characterDTOS = characterMapper.characterEntitySet2DTOSet(entity.getCharacters(),false);
+            Set<CharacterDTO> characterDTOS = characterMapper.characterEntityCollection2DTOSet(entity.getCharacters(),false);
             movieDTO.setCharacters(characterDTOS);
         }
         return movieDTO;
-    }
-
-    //conversión MovieEntitySet a MovieDTOSet
-    public Set<MovieDTO> movieEntity2DTOSet(Set<MovieEntity> movieSet, boolean b){
-        Set<MovieDTO> movieDTOSet = new HashSet<>();
-        for (MovieEntity entity: movieSet){
-            movieDTOSet.add(movieEntity2DTO(entity,b));
-        }
-        return movieDTOSet;
     }
 
     //conversión MovieEntity a MovieBasicDTO
@@ -79,22 +64,30 @@ public class MovieMapper {
         return LocalDate.parse(stringDate, formatter);
     }
 
-    //conversión de MovieEntityCollection a MovieBasicDTOSet
-    public Set<MovieBasicDTO> movieEntityCollection2BasicDTOSet(Collection<MovieEntity> entities) {
-        Set<MovieBasicDTO> DTOS = new HashSet<>();
+    //conversión de MovieEntityCollection a MovieDTOSet
+    public Set<MovieDTO> movieEntityCollection2DTOSet(Collection<MovieEntity> entities, boolean loadCharacters){
+        Set<MovieDTO> DTOs = new HashSet<>();
         for (MovieEntity entity : entities){
-            DTOS.add(movieEntity2BasicDTO(entity));
+            DTOs.add(movieEntity2DTO(entity, loadCharacters));
         }
-        return DTOS;
+        return DTOs;
     }
 
-    //se modifica la información de la Entidad con la del DTO
-    public void modifyMovieRefreshValues(MovieEntity entity, MovieDTO movieDTO) {
-        entity.setImage(movieDTO.getImage());
-        entity.setTitle(movieDTO.getTitle());
-        entity.setCreationDate(string2LocalDate(movieDTO.getCreationDate().toString()));
-        entity.setScore(movieDTO.getScore());
-        entity.setGenreId(movieDTO.getGenreId());
-        Set<CharacterEntity> characterEntities = characterMapper.characterDTOSet2EntitySet(movieDTO.getCharacters());
+    //conversión de MovieEntityCollection a MovieDTOList
+    public List<MovieDTO> movieEntityCollection2DTOList(Collection<MovieEntity> entities, boolean loadCharacters){
+        List<MovieDTO> DTOs = new ArrayList<>();
+        for (MovieEntity entity : entities){
+            DTOs.add(movieEntity2DTO(entity, loadCharacters));
+        }
+        return DTOs;
+    }
+
+    //conversión de MovieEntityCollection a MovieBasicDTOList
+    public List<MovieBasicDTO> movieEntityCollection2BasicDTOList(Collection<MovieEntity> entities) {
+        List<MovieBasicDTO> DTOs = new ArrayList<>();
+        for (MovieEntity entity : entities){
+            DTOs.add(movieEntity2BasicDTO(entity));
+        }
+        return DTOs;
     }
 }

@@ -10,14 +10,15 @@ import com.alkemy.disney.mapper.MovieMapper;
 import com.alkemy.disney.repository.CharacterRepository;
 import com.alkemy.disney.repository.MovieRepository;
 import com.alkemy.disney.repository.specifications.MovieSpecification;
+import com.alkemy.disney.service.GenreService;
 import com.alkemy.disney.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional
@@ -29,6 +30,9 @@ public class IMovieService implements MovieService {
 
     @Autowired
     private final MovieRepository movieRepository;
+
+    @Autowired
+    private GenreService genreService;
 
     @Autowired
     private final MovieSpecification movieSpecification;
@@ -74,10 +78,10 @@ public class IMovieService implements MovieService {
     }
 
     //búsqueda de películas por filtro (nombre y género (tiene orden ASC/DESC))
-    public Set<MovieBasicDTO> getByFilters(String name, Long genreId, String order) {
+    public List<MovieBasicDTO> getByFilters(String name, Long genreId, String order) {
         MovieFiltersDTO filtersDTO = new MovieFiltersDTO(name, genreId, order);
-        Set<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
-        Set<MovieBasicDTO> dtos = movieMapper.movieEntityCollection2BasicDTOSet(entities);
+        List<MovieEntity> entities = movieRepository.findAll(movieSpecification.getByFilters(filtersDTO));
+        List<MovieBasicDTO> dtos = movieMapper.movieEntityCollection2BasicDTOList(entities);
         return dtos;
     }
 
@@ -96,10 +100,15 @@ public class IMovieService implements MovieService {
         if(!entity.isPresent()) {
             throw new ParamNotFound("ID de título para modificar no encontrado");
         }
-        movieMapper.modifyMovieRefreshValues(entity.get(),movieDTO);
-        MovieEntity savedEntity = movieRepository.save(entity.get());
-        MovieDTO result = movieMapper.movieEntity2DTO(savedEntity, true);
-        return result;
+        MovieEntity movie = getMovieEntityById(id);
+        movie.setTitle(movieDTO.getTitle());
+        movie.setImage(movieDTO.getImage());
+        movie.setCreationDate(movieDTO.getCreationDate());
+        movie.setScore(movieDTO.getScore());
+        movie.setGenreId(movieDTO.getGenreId());
+        movie.setGenre(genreService.getGenreEntityById(movie.getGenreId()));
+        movieRepository.save(movie);
+        return movieMapper.movieEntity2DTO(movie, false);
     }
 
     //agrega un personaje a una película

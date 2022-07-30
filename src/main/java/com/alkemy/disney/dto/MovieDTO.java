@@ -1,6 +1,5 @@
 package com.alkemy.disney.dto;
 
-import com.alkemy.disney.entity.CharacterEntity;
 import com.alkemy.disney.entity.GenreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -28,13 +28,13 @@ public class MovieDTO {
 
     private LocalDate creationDate;
 
-    @Min(1)
-    @Max(5)
+    @Min(value = 1, message = "El minimo es 1")
+    @Max(value = 5, message = "El maximo es 5")
     private Integer score;
 
     private GenreEntity genre;
 
     private Long genreId;
 
-    private Set<CharacterDTO> characters;
+    private Set<CharacterDTO> characters = new HashSet<>();
 }

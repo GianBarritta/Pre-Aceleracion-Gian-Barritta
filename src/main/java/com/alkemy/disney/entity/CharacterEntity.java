@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE character SET deleted = true WHERE id=?")
-@Where(clause = "deleted = false")
+@Where(clause = "deleted=false")
 public class CharacterEntity {
 
     @Id

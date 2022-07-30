@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -54,33 +55,25 @@ public class ICharacterService implements CharacterService {
     }
 
     //búsqueda de personajes por filtros (nombre, edad, peso y películas (tiene orden ASC/DESC))
-    public Set<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies) {
+    public List<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies) {
         CharacterFiltersDTO filtersDTO = new CharacterFiltersDTO(name, age, weight, movies);
-        Set<CharacterEntity> entities = characterRepository.findAll(characterSpecification.getByFilters(filtersDTO));
-        Set<CharacterBasicDTO> dtos = characterMapper.characterEntityCollection2BasicDTOSet(entities);
+        List<CharacterEntity> entities = characterRepository.findAll(characterSpecification.getByFilters(filtersDTO));
+        List<CharacterBasicDTO> dtos = characterMapper.characterEntityCollection2BasicDTOList(entities);
         return dtos;
     }
 
     //devuelve todos los personajes guardados en el repositorio con sus peliculas asociadas
     public Set<CharacterDTO> getCharacters() {
         Set<CharacterEntity> entities = (Set<CharacterEntity>) characterRepository.findAll();
-        Set<CharacterDTO> result = characterMapper.characterEntitySet2DTOSet(entities,true);
+        Set<CharacterDTO> result = characterMapper.characterEntityCollection2DTOSet(entities,true);
         return result;
-    }
-
-    //busca todos los personajes con datos específicos
-    public Set<CharacterBasicDTO> getAllCharactersBasic() {
-        Set<CharacterEntity> characterEntitiesBasicSet = (Set<CharacterEntity>) characterRepository.findAll();
-        return characterMapper.characterEntitySet2BasicDTOSet(characterEntitiesBasicSet);
     }
 
     //guardar al personaje en el repositorio
-    public CharacterDTO save(CharacterDTO dto, Long movieId) {
+    public CharacterDTO save(CharacterDTO dto) {
         CharacterEntity entity = characterMapper.characterDTO2Entity(dto);
         CharacterEntity savedEntity = characterRepository.save(entity);
-        iMovieService.addCharacter(movieId, savedEntity.getId());
-        CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity,true);
-        return result;
+        return characterMapper.characterEntity2DTO(savedEntity, true);
     }
 
     //invoca un método de mapeador y modifica solo los valores del personaje
@@ -90,10 +83,14 @@ public class ICharacterService implements CharacterService {
         {
             throw new ParamNotFound("ID de personaje para modificar no encontrado");
         }
-        characterMapper.modifyCharacterRefreshValues(entity.get(),characterDTO);
-        CharacterEntity savedEntity = characterRepository.save(entity.get());
-        CharacterDTO result = characterMapper.characterEntity2DTO(savedEntity, true);
-        return result;
+        CharacterEntity character = getCharacterById(id);
+        character.setName(characterDTO.getName());
+        character.setImage(characterDTO.getImage());
+        character.setAge(characterDTO.getAge());
+        character.setWeight(characterDTO.getWeight());
+        character.setHistory(characterDTO.getHistory());
+        characterRepository.save(character);
+        return characterMapper.characterEntity2DTO(character, false);
     }
 
     //Soft Delete de un personaje guardado en el repositorio

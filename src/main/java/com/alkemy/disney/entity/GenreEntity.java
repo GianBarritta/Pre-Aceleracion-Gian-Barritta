@@ -16,8 +16,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE genre SET deleted = true WHERE id=?")
-@Where(clause = "deleted = false")
 public class GenreEntity {
 
     @Id
@@ -27,8 +25,6 @@ public class GenreEntity {
     private String image;
 
     private String name;
-
-    private boolean deleted = Boolean.FALSE;
 
     @OneToMany(mappedBy = "genres")
     private List<MovieEntity> movies;

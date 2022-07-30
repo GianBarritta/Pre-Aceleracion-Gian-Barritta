@@ -23,7 +23,7 @@ public class MovieSpecification {
             if (StringUtils.hasLength(filtersDTO.getName())) {
                 predicates.add(
                         criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("name")),
+                                criteriaBuilder.lower(root.get("title")),
                                 "%" + filtersDTO.getName().toLowerCase() + "%"
                         )
                 );
@@ -33,11 +33,7 @@ public class MovieSpecification {
             if(filtersDTO.getGenreId() != null)
             {
                 predicates.add(
-                        criteriaBuilder.like(
-                                root.get("genreId").as(String.class),
-                                "%" + filtersDTO.getGenreId() + "%"
-                        )
-                );
+                                criteriaBuilder.equal(root.get("genreId"), filtersDTO.getGenreId()));
             }
 
             //removiendo duplicados

@@ -4,10 +4,11 @@ import com.alkemy.disney.dto.CharacterBasicDTO;
 import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.entity.CharacterEntity;
 
+import java.util.List;
 import java.util.Set;
 
 public interface CharacterService {
-    CharacterDTO save(CharacterDTO dto, Long movieId);
+    CharacterDTO save(CharacterDTO dto);
 
     CharacterEntity getCharacterById(Long id);
 
@@ -15,11 +16,9 @@ public interface CharacterService {
 
     Set<CharacterDTO> getCharacters();
 
-    Set<CharacterBasicDTO> getAllCharactersBasic();
-
     CharacterDTO updateCharacter(Long id, CharacterDTO characterDTO);
 
-    Set<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies);
+    List<CharacterBasicDTO> getByFilters(String name, Integer age, double weight, Set<Long> movies);
 
     void delete(Long id);
 }
