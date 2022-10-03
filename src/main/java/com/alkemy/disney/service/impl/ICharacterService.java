@@ -45,17 +45,7 @@ public class ICharacterService implements CharacterService {
         return characterMapper.characterEntityCollection2BasicDTOList(entities);
     }
 
-    public Set<CharacterDTO> getCharacters() {
-        Set<CharacterEntity> entities = (Set<CharacterEntity>) characterRepository.findAll();
-        return characterMapper.characterEntityCollection2DTOSet(entities,true);
-    }
-
     public CharacterDTO updateCharacter(Long id, CharacterDTO characterDTO) {
-        Optional<CharacterEntity> entity = characterRepository.findById(id);
-        if(entity.isEmpty())
-        {
-            throw new ParamNotFound("ID de personaje para modificar no encontrado");
-        }
         CharacterEntity character = getCharacterById(id);
         character.setName(characterDTO.getName());
         character.setImage(characterDTO.getImage());

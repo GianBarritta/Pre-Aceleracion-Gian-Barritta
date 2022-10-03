@@ -53,11 +53,6 @@ public class IMovieService implements MovieService {
     }
 
     public MovieDTO updateMovie(Long id, MovieDTO movieDTO) {
-        Optional<MovieEntity> entity = movieRepository.findById(id);
-
-        if(entity.isEmpty()) {
-            throw new ParamNotFound("ID de película para modificar no encontrado");
-        }
         MovieEntity movie = getMovieById(id);
         movie.setTitle(movieDTO.getTitle());
         movie.setImage(movieDTO.getImage());
