@@ -10,8 +10,6 @@ import java.util.Set;
 public interface CharacterService {
     CharacterDTO save(CharacterDTO dto);
 
-    CharacterEntity getCharacterById(Long id);
-
     CharacterDTO getCharacterDTOById(Long id);
 
     Set<CharacterDTO> getCharacters();
