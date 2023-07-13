@@ -19,7 +19,6 @@ public class CharacterDTO {
 
     private String image;
 
-    @NotNull
     private String name;
 
     private Integer age;

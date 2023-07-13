@@ -28,8 +28,6 @@ public class MovieDTO {
 
     private LocalDate creationDate;
 
-    @Min(value = 1, message = "El minimo es 1")
-    @Max(value = 5, message = "El maximo es 5")
     private Integer score;
 
     private GenreEntity genre;
