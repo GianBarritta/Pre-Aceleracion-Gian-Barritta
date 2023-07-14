@@ -30,7 +30,7 @@ public class IGenreService implements GenreService {
     public GenreEntity getGenreEntityById(Long id) {
         Optional<GenreEntity> genre = genreRepository.findById(id);
         if (genre.isEmpty()) {
-            throw new ParamNotFound("Genre with id: " + id + " not found");
+            throw new ParamNotFound("Género con ID: " + id + " no encontrado");
         }
         return genre.get();
     }

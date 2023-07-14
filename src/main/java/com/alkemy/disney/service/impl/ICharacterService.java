@@ -64,7 +64,7 @@ public class ICharacterService implements CharacterService {
     private CharacterEntity getCharacterById(Long id) {
         Optional<CharacterEntity> entity = characterRepository.findById(id);
         if(entity.isEmpty()) {
-            throw new ParamNotFound("ID de personaje no encontrado");
+            throw new ParamNotFound("Personaje con ID: " + id + " no encontrado");
         }
         return entity.get();
     }
