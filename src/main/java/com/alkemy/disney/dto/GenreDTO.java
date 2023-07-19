@@ -1,6 +1,6 @@
 package com.alkemy.disney.dto;
 
-import com.alkemy.disney.entity.MovieEntity;
+import com.alkemy.disney.entity.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +22,5 @@ public class GenreDTO {
     @NotNull
     private String name;
 
-    private Set<MovieEntity> movies;
+    private Set<Movie> movies;
 }

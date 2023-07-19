@@ -1,7 +1,7 @@
 package com.alkemy.disney.repository.specifications;
 
 import com.alkemy.disney.dto.MovieFiltersDTO;
-import com.alkemy.disney.entity.MovieEntity;
+import com.alkemy.disney.entity.Movie;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class MovieSpecification {
 
-    public Specification<MovieEntity> getByFilters(MovieFiltersDTO filtersDTO) {
+    public Specification<Movie> getByFilters(MovieFiltersDTO filtersDTO) {
         return (root, query, criteriaBuilder) -> {
 
             //lista de predicados para consultas dinámicas

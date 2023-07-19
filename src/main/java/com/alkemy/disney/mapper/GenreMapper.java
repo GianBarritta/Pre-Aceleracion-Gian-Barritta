@@ -1,27 +1,27 @@
 package com.alkemy.disney.mapper;
 
 import com.alkemy.disney.dto.GenreDTO;
-import com.alkemy.disney.entity.GenreEntity;
+import com.alkemy.disney.entity.Genre;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GenreMapper {
 
-    //conversión GenreEntity a GenreDTO
-    public GenreDTO genreEntity2DTO(GenreEntity genreEntity) {
+    //conversión Genre a GenreDTO
+    public GenreDTO genreEntity2DTO(Genre genre) {
         GenreDTO genreDTO = new GenreDTO();
-        genreDTO.setId(genreEntity.getId());
-        genreDTO.setImage(genreEntity.getImage());
-        genreDTO.setName(genreEntity.getName());
+        genreDTO.setId(genre.getId());
+        genreDTO.setImage(genre.getImage());
+        genreDTO.setName(genre.getName());
         return genreDTO;
     }
 
-    //conversión GenreDTO a GenreEntity
-    public GenreEntity genreDTO2Entity(GenreDTO genreDTO) {
-        GenreEntity genreEntity = new GenreEntity();
-        genreEntity.setImage(genreDTO.getImage());
-        genreEntity.setName(genreDTO.getName());
-        return genreEntity;
+    //conversión GenreDTO a Genre
+    public Genre genreDTO2Entity(GenreDTO genreDTO) {
+        Genre genre = new Genre();
+        genre.setImage(genreDTO.getImage());
+        genre.setName(genreDTO.getName());
+        return genre;
     }
 }
 

@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GenreEntity {
+public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,5 +25,5 @@ public class GenreEntity {
     private String name;
 
     @OneToMany(mappedBy = "genre")
-    private List<MovieEntity> movies;
+    private List<Movie> movies;
 }

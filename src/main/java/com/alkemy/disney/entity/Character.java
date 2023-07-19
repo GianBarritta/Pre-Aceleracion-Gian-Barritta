@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE character SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class CharacterEntity {
+public class Character {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -38,5 +38,5 @@ public class CharacterEntity {
     private boolean deleted = Boolean.FALSE;
 
     @ManyToMany(mappedBy = "characters")
-    private Set<MovieEntity> movies = new HashSet<>();
+    private Set<Movie> movies = new HashSet<>();
 }

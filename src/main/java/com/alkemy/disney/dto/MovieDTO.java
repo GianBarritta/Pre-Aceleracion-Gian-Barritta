@@ -1,13 +1,11 @@
 package com.alkemy.disney.dto;
 
-import com.alkemy.disney.entity.GenreEntity;
+import com.alkemy.disney.entity.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -30,7 +28,7 @@ public class MovieDTO {
 
     private Integer score;
 
-    private GenreEntity genre;
+    private Genre genre;
 
     private Long genreId;
 

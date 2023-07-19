@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE movie SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class MovieEntity {
+public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -49,20 +49,20 @@ public class MovieEntity {
             joinColumns = @JoinColumn(name = "movie_id"),
             // join del lado: character
             inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private Set<CharacterEntity> characters = new HashSet<>();
+    private Set<Character> characters = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "genre_id", insertable = false, updatable = false)
-    private GenreEntity genre;
+    private Genre genre;
 
     @Column(name = "genre_id", nullable = false)
     private Long genreId;
 
-    public void addCharacter(CharacterEntity character) {
+    public void addCharacter(Character character) {
         this.getCharacters().add(character);
     }
 
-    public void removeCharacter(CharacterEntity character) {
+    public void removeCharacter(Character character) {
         this.getCharacters().remove(character);
     }
 }
