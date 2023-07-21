@@ -44,10 +44,8 @@ public class Movie {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "character_movie", // nombre asignado a la tabla intermedia
-            // join del lado: movie
+    @JoinTable(name = "character_movie",
             joinColumns = @JoinColumn(name = "movie_id"),
-            // join del lado: character
             inverseJoinColumns = @JoinColumn(name = "character_id"))
     private Set<Character> characters = new HashSet<>();
 
